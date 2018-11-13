@@ -1,10 +1,5 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {
-  SortableContainer,
-  SortableElement,
-  SortableHandler
-} from 'react-sortable-hoc';
 
 const RatingsContainer = () => (
   <ul
@@ -52,18 +47,71 @@ const PlayerItem = ({player}) => (
 
 const SortableList = ({ options, ...props }) => {
   return (
-    <RatingsContainer>
-      
-    </RatingsContainer>
+    <RatingsContainer />
   )
 };
 
-const NewRatings = props => (
+class NewRatings extends Component {
+  static contextTypes = {
+    firebase: PropTypes.object
+  };
+
+  static propTypes = {
+  }
+
+  state = {
+    title: '',
+    players: [],
+    loading: false,
+  }
+
+  // to keep track of what item is being edited
+  editing = null;
+
+  render() {
+    const { players, loading, title } = this.state;
+    //const playersWithText = players.filter(({ text }) => !!text.trim());
+    //const disableCreate = !title || playersWithText.length < 2 || loading;
+    const squadRef = this.context.firebase.squad;
+    
+    squadRef.get().then(function(querySnapshot) {
+      querySnapshot.forEach(function(doc) {
+          // doc.data() is never undefined for query doc snapshots
+          console.log(doc.id, " => ", doc.data());
+      });
+    })
+    .catch(function(error) {
+        console.log("Error getting documents: ", error);
+    });
+
+    return (
+      <div>
+        <h2>Create a new rating</h2>
+        <div
+          style={{
+            display: 'inline-flex',
+            width: '350px',
+            flexDirection: 'column',
+            marginBottom: '30px'
+          }}
+        >
+          {
+            players
+          }      
+        </div>
+      </div>
+    )
+  }
+
+}
+
+
+/* const NewRatings = props => (
   <h1>Rating</h1>
 );
 
-NewRatings.PropTypes = {
+NewRatings.propTypes = {
 
 };
-
+ */
 export { NewRatings };

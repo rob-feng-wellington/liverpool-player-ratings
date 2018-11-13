@@ -1,7 +1,13 @@
 import React from 'react'
 import { Link } from 'gatsby'
+import PropTypes from 'prop-types';
 
-const Header = ({ siteTitle }) => (
+import SignIn from './SignIn';
+import GoogleIcon from './icons/Google';
+
+const BACKGROUND = 'background-color: #20232a';
+
+const Header = ({ siteTitle, background, signIn, signOut, isAuthed }) => (
   <div
     style={{
       background: 'rebeccapurple',
@@ -23,8 +29,25 @@ const Header = ({ siteTitle }) => (
           {siteTitle}
         </Link>
       </h1>
+      <SignIn
+        onClick={() => (isAuthed ? signOut() : signIn('google'))}
+        icon={isAuthed ? null : <GoogleIcon />}
+        text={isAuthed ? 'Sign Out' : 'Sign in with Google'}
+      />
     </div>
   </div>
 )
+
+Header.defaultProps = {
+  background: BACKGROUND
+};
+
+Header.propTypes = {
+  background: PropTypes.string,
+  signIn: PropTypes.func.isRequired,
+  signOut: PropTypes.func.isRequired,
+  siteTitle: PropTypes.string,
+  isAuthed: PropTypes.bool
+};
 
 export default Header
