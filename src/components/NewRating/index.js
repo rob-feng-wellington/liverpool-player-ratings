@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Button from '@material-ui/core/Button';
 
 const RatingsContainer = () => (
   <ul
@@ -68,21 +69,24 @@ class NewRatings extends Component {
   // to keep track of what item is being edited
   editing = null;
 
-  render() {
-    const { players, loading, title } = this.state;
-    //const playersWithText = players.filter(({ text }) => !!text.trim());
-    //const disableCreate = !title || playersWithText.length < 2 || loading;
+  componentDidMount() {
     const squadRef = this.context.firebase.squad;
-    
-    squadRef.get().then(function(querySnapshot) {
-      querySnapshot.forEach(function(doc) {
-          // doc.data() is never undefined for query doc snapshots
-          console.log(doc.id, " => ", doc.data());
+    squadRef.get().then((querySnapshot) => {
+      const allSquads = querySnapshot.docs.map(doc => {
+        const player = doc.data();
+        player.id = doc.id;
+        return player;
       });
+      console.log(allSquads);
+      this.setState({players: allSquads});
     })
     .catch(function(error) {
         console.log("Error getting documents: ", error);
     });
+  }
+
+  render() {
+    const { players, loading, title } = this.state;
 
     return (
       <div>
@@ -96,9 +100,12 @@ class NewRatings extends Component {
           }}
         >
           {
-            players
-          }      
+            players.length
+          }    
         </div>
+        <Button>
+          Hello World
+        </Button>
       </div>
     )
   }
@@ -106,12 +113,4 @@ class NewRatings extends Component {
 }
 
 
-/* const NewRatings = props => (
-  <h1>Rating</h1>
-);
-
-NewRatings.propTypes = {
-
-};
- */
 export { NewRatings };
