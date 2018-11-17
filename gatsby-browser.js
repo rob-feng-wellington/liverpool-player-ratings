@@ -9,6 +9,9 @@ import React from 'react';
 import FirebaseProvider from './src/containers/FirebaseProvider';
 
 import firebase from './src/services/firebase';
+import { install } from '@material-ui/styles';
+
+install();
 
 export const wrapRootElement = ({ element }) => (
   <FirebaseProvider firebase={firebase}>{element}</FirebaseProvider>
