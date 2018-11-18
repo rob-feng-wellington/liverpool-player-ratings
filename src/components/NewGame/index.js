@@ -16,7 +16,6 @@ import InputLabel from '@material-ui/core/InputLabel';
 const styles = () => ({
   root: {
     flexGrow: 1,
-    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
   }
 })
 
@@ -108,41 +107,42 @@ class NewGame extends Component {
               className={classes.textField}
             />
           </Grid>
-        </Grid>
-      </div>
-
-
-      /* allPlayers.length > 0 ?
-      (
-        <List className={classes.root} subheader={<ListSubheader>Full Squad</ListSubheader>}>
-          {
-            this.order.map(position => (
-              <li key={`position-${position}`}>
-                <ul>
-                  <ListSubheader>{position}</ListSubheader>
+          <Grid item xs={6}>
+            {
+              allPlayers.length > 0 ?
+              (
+                <List className={classes.root} subheader={<ListSubheader>Full Squad</ListSubheader>}>
                   {
-                    groupedPlayers[position].map(player => (
-                      <ListItem key={player.id}>
-                        <ListItemText primary={player.number} />
-                        <ListItemText primary={player.name} />
-                        <ListItemSecondaryAction>
-                          <Switch
-                            onChange={() => this.handleToggle(player.id)}
-                            checked={startingList.indexOf(player.id) !== -1}
-                          />
-                        </ListItemSecondaryAction>
-                      </ListItem>
+                    this.order.map(position => (
+                      <li key={`position-${position}`}>
+                        <ul>
+                          <ListSubheader>{position}</ListSubheader>
+                          {
+                            groupedPlayers[position].map(player => (
+                              <ListItem key={player.id}>
+                                <ListItemText primary={player.number} />
+                                <ListItemText primary={player.name} />
+                                <ListItemSecondaryAction>
+                                  <Switch
+                                    onChange={() => this.handleToggle(player.id)}
+                                    checked={startingList.indexOf(player.id) !== -1}
+                                  />
+                                </ListItemSecondaryAction>
+                              </ListItem>
+                            ))
+                          }
+                        </ul>
+                      </li>
                     ))
                   }
-                </ul>
-              </li>
-            ))
-          }
-        </List>
-      )
-      :
-      <div>loading</div>
- */
+                </List>
+              )
+              :
+              <div>loading</div>
+            }    
+          </Grid>
+        </Grid>
+      </div>
     )
   }
 }
