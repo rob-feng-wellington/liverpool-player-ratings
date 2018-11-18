@@ -6,40 +6,7 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import Switch from '@material-ui/core/Switch';
-import { makeStyles } from '@material-ui/styles';
 
-const useStyles = makeStyles({
-  root: {
-    color: '#000',
-    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
-  }
-});
-
-const  order = ['GK', 'DF', 'MF', 'FW'];
-
-const NewGame = ({allPlayers}) => {
-  const [startingList, setStartingList] = useState([]);
-  const [subList, setSubList] = useState([]);
-  const [title, setTitle] = useState('');
-  const [date, setDate] = useState('');
-
-  const classes = useStyles();
-
-  return (
-        allPlayers.length > 0 ?
-        <div>yes</div>
-        :
-        <div className={classes.root}>loading</div>
-      
-  )
-
-}
-
-NewGame.propTypes = {
-  allPlayers: PropTypes.array.isRequired,
-}
-
-/* 
 class NewGame extends Component {
   static propTypes = {
     allPlayers: PropTypes.array.isRequired,
@@ -89,14 +56,12 @@ class NewGame extends Component {
       date
     } = this.state;
 
-    const classes = useStyles();
-
     const groupedPlayers = this.groupByPosition(allPlayers);
     console.log(startingList);
     return(
       allPlayers.length > 0 ?
       (
-        <List className={classes.root} subheader={<ListSubheader>Full Squad</ListSubheader>}>
+        <List subheader={<ListSubheader>Full Squad</ListSubheader>}>
           {
             this.order.map(position => (
               <li key={`position-${position}`}>
@@ -128,6 +93,5 @@ class NewGame extends Component {
     )
   }
 }
- */
 
 export default NewGame;

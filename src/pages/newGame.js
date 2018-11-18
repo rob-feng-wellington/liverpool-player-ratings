@@ -30,10 +30,6 @@ class NewGamePage extends Component {
     });
   }
 
-  componentWillUnmount() {
-
-  }
-
   render() {
     const { allPlayers, title, date } = this.state;
     return (
