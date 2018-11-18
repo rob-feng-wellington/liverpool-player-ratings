@@ -6,10 +6,24 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import Switch from '@material-ui/core/Switch';
+import { withStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import TextField from '@material-ui/core/TextField';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
+
+const styles = () => ({
+  root: {
+    flexGrow: 1,
+    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+  }
+})
 
 class NewGame extends Component {
   static propTypes = {
     allPlayers: PropTypes.array.isRequired,
+    classes: PropTypes.object.isRequired
   }
   
   order = ['GK', 'DF', 'MF', 'FW'];
@@ -48,7 +62,7 @@ class NewGame extends Component {
   }
 
   render() {
-    const { allPlayers } = this.props;
+    const { allPlayers, classes } = this.props;
     const {
       startingList,
       subList,
@@ -59,9 +73,48 @@ class NewGame extends Component {
     const groupedPlayers = this.groupByPosition(allPlayers);
     console.log(startingList);
     return(
-      allPlayers.length > 0 ?
+      <div className={classes.root}>
+        <Grid container spacing={24}>
+          <Grid item xs={12}>
+            <TextField
+              id="opponent-team"
+              label="Opponent"
+              className={classes.textField}
+              value={''}
+              fullWidth
+              margin="normal"
+            />
+          </Grid>
+          <Grid item xs={6}>
+            {/* <InputLabel htmlFor="home-away">Home-Away</InputLabel> */}
+            <Select
+              value={''}
+              inputProps={{
+                name: 'home-away',
+                id: 'home-away-select',
+              }}
+              fullWidth
+            >
+              <MenuItem value={'home'}>Home</MenuItem>
+              <MenuItem value={'away'}>Away</MenuItem>
+            </Select>
+          </Grid> 
+          <Grid item xs={6}>
+            <TextField
+              id="date"
+              type="date"
+              defaultValue="2017-05-24"
+              fullWidth
+              className={classes.textField}
+            />
+          </Grid>
+        </Grid>
+      </div>
+
+
+      /* allPlayers.length > 0 ?
       (
-        <List subheader={<ListSubheader>Full Squad</ListSubheader>}>
+        <List className={classes.root} subheader={<ListSubheader>Full Squad</ListSubheader>}>
           {
             this.order.map(position => (
               <li key={`position-${position}`}>
@@ -89,9 +142,9 @@ class NewGame extends Component {
       )
       :
       <div>loading</div>
-
+ */
     )
   }
 }
 
-export default NewGame;
+export default withStyles(styles)(NewGame);
