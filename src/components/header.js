@@ -6,9 +6,66 @@ import SignIn from './SignIn';
 import GoogleIcon from './icons/Google';
 
 const BACKGROUND = 'background-color: #20232a';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
-const Header = ({ siteTitle, background, signIn, signOut, isAuthed }) => (
-  <div
+const Header = ({ siteTitle, background, signIn, signOut, isAuthed }) => {
+  const handleMenu = (e) => {
+
+  }
+
+  const handleClose = (e) => {
+
+  }
+  return (
+    <div>
+      <AppBar position="static">
+        <Toolbar>
+          <Typography variant="h6" color="inherit" style={{
+            flexGrow: 1,
+          }}>
+            {siteTitle}
+          </Typography>
+          <div>
+            <IconButton
+              aria-owns={open ? 'menu-appbar' : undefined}
+              aria-haspopup="true"
+              onClick={handleMenu}
+              color="inherit"
+            >
+              <AccountCircle />
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={open}
+              onClose={handleClose}
+            >
+              <MenuItem onClick={handleClose}>Profile</MenuItem>
+              <MenuItem onClick={handleClose}>My account</MenuItem>
+            </Menu>
+          </div>
+          <Button color="inherit">Login</Button>
+        </Toolbar>
+      </AppBar>
+    </div>
+  )
+}
+
+  {/* <div
     style={{
       background: 'rebeccapurple',
       marginBottom: '1.45rem',
@@ -35,8 +92,7 @@ const Header = ({ siteTitle, background, signIn, signOut, isAuthed }) => (
         text={isAuthed ? 'Sign Out' : 'Sign in with Google'}
       />
     </div>
-  </div>
-)
+  </div> */}
 
 Header.defaultProps = {
   background: BACKGROUND

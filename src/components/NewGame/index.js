@@ -12,6 +12,7 @@ import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
+import Button from '@material-ui/core/Button';
 
 const styles = () => ({
   root: {
@@ -44,11 +45,19 @@ class NewGame extends Component {
     )
   }
 
-  handleToggle = (playerId) => {
+  getPlayerById = (playerId) => {
+    return this.props.allPlayers.filter(
+      (player) => player.id === playerId
+    ).reduce(
+      (x, y) => x
+    )
+  }
+
+  handleStartingToggle = (playerId) => {
     const { startingList } = this.state;
     const currentIndex = startingList.indexOf(playerId);
     const newStartingList = [...startingList];
-    console.log(playerId);
+
     if (currentIndex === -1) {
       newStartingList.push(playerId);
     } else {
@@ -60,6 +69,22 @@ class NewGame extends Component {
     })
   }
 
+  handleSubToggle = (playerId) => {
+    const { subList } = this.state;
+    const currentIndex = subList.indexOf(playerId);
+    const newSubList = [...subList];
+
+    if (currentIndex === -1) {
+      newSubList.push(playerId);
+    } else {
+      newSubList.splice(currentIndex, 1);
+    }
+    
+    this.setState({
+      subList: newSubList
+    })
+  }
+
   render() {
     const { allPlayers, classes } = this.props;
     const {
@@ -68,12 +93,12 @@ class NewGame extends Component {
       title,
       date
     } = this.state;
+    console.log(startingList);
 
     const groupedPlayers = this.groupByPosition(allPlayers);
-    console.log(startingList);
     return(
-      <div className={classes.root}>
-        <Grid container spacing={24}>
+      <form className={classes.root} onSubmit={this.handleSubmit}>
+        <Grid container spacing={32}>
           <Grid item xs={12}>
             <TextField
               id="opponent-team"
@@ -85,7 +110,6 @@ class NewGame extends Component {
             />
           </Grid>
           <Grid item xs={6}>
-            {/* <InputLabel htmlFor="home-away">Home-Away</InputLabel> */}
             <Select
               value={''}
               inputProps={{
@@ -111,7 +135,8 @@ class NewGame extends Component {
             {
               allPlayers.length > 0 ?
               (
-                <List className={classes.root} subheader={<ListSubheader>Full Squad</ListSubheader>}>
+                <List>
+                  <h3>Full Squad</h3>
                   {
                     this.order.map(position => (
                       <li key={`position-${position}`}>
@@ -124,8 +149,12 @@ class NewGame extends Component {
                                 <ListItemText primary={player.name} />
                                 <ListItemSecondaryAction>
                                   <Switch
-                                    onChange={() => this.handleToggle(player.id)}
+                                    onChange={() => this.handleStartingToggle(player.id)}
                                     checked={startingList.indexOf(player.id) !== -1}
+                                  />
+                                  <Switch
+                                    onChange={() => this.handleSubToggle(player.id)}
+                                    checked={subList.indexOf(player.id) !== -1}
                                   />
                                 </ListItemSecondaryAction>
                               </ListItem>
@@ -141,8 +170,44 @@ class NewGame extends Component {
               <div>loading</div>
             }    
           </Grid>
+          <Grid item xs={6}>
+            <List>
+              <h3>Line-up</h3>
+              <ListSubheader>Starting line-up</ListSubheader>
+              <ul>
+              {
+                startingList.map(playerId => {
+                  const player = this.getPlayerById(playerId);
+                  return(
+                    <ListItem key={`player-${player.id}`}>
+                      <ListItemText primary={player.number} />
+                      <ListItemText primary={player.name} />
+                    </ListItem>
+                  )
+                })
+              }
+              <ListSubheader>Subs</ListSubheader>
+              {
+                subList.map(playerId => {
+                  const player = this.getPlayerById(playerId);
+                  return(
+                    <ListItem key={`player-${player.id}`}>
+                      <ListItemText primary={player.number} />
+                      <ListItemText primary={player.name} />
+                    </ListItem>
+                  )
+                })
+              }
+              </ul>
+            </List>
+          </Grid>
+          <Grid item xs={12}>
+            <Button variant="contained" color="primary" type="submit">
+              Submit
+            </Button>
+          </Grid>
         </Grid>
-      </div>
+      </form>
     )
   }
 }

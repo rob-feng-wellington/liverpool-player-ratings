@@ -1,6 +1,6 @@
 module.exports = {
   siteMetadata: {
-    title: 'Liverpool Player Ratings',
+    title: 'Rating',
   },
   plugins: [
     'gatsby-plugin-react-helmet',

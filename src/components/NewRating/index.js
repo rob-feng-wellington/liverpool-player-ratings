@@ -77,7 +77,6 @@ class NewRatings extends Component {
         player.id = doc.id;
         return player;
       });
-      console.log(allSquads);
       this.setState({players: allSquads});
     })
     .catch(function(error) {
