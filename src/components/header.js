@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { Link } from 'gatsby'
 import PropTypes from 'prop-types';
 
@@ -15,7 +15,78 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
-const Header = ({ siteTitle, background, signIn, signOut, isAuthed }) => {
+class Header extends Component {
+  static propTypes = {
+    signIn: PropTypes.func.isRequired,
+    signOut: PropTypes.func.isRequired,
+    siteTitle: PropTypes.string,
+    isAuthed: PropTypes.bool
+  }
+
+  state = {
+    anchorEl: null,
+  }
+
+  handleMenu = (e) => {
+
+  }
+
+  handleClose = (e) => {
+
+  }
+
+  render() {
+    const { signIn, signOut, siteTitle, isAuthed } = this.props;
+    const { anchorEl } = this.state;
+    const open = Boolean(anchorEl);
+
+    return (
+      <div>
+        <AppBar position="static">
+          <Toolbar>
+            <Typography variant="h6" color="inherit" style={{
+              flexGrow: 1,
+            }}>
+              {siteTitle}
+            </Typography>
+            <div>
+              <IconButton
+                aria-owns={open ? 'menu-appbar' : undefined}
+                aria-haspopup="true"
+                onClick={this.handleMenu}
+                color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={open}
+                onClose={this.handleClose}
+              >
+                <MenuItem onClick={this.handleClose}>Profile</MenuItem>
+                <MenuItem onClick={this.handleClose}>My account</MenuItem>
+              </Menu>
+            </div>
+            <Button color="inherit">Login</Button>
+          </Toolbar>
+        </AppBar>
+      </div>
+    )
+  }
+}
+
+
+
+/* const Header = ({ siteTitle, background, signIn, signOut, isAuthed }) => {
   const handleMenu = (e) => {
 
   }
@@ -43,6 +114,7 @@ const Header = ({ siteTitle, background, signIn, signOut, isAuthed }) => {
             </IconButton>
             <Menu
               id="menu-appbar"
+              anchorEl={anchorEl}
               anchorOrigin={{
                 vertical: 'top',
                 horizontal: 'right',
@@ -63,9 +135,9 @@ const Header = ({ siteTitle, background, signIn, signOut, isAuthed }) => {
       </AppBar>
     </div>
   )
-}
+} */
 
-  {/* <div
+  /* <div
     style={{
       background: 'rebeccapurple',
       marginBottom: '1.45rem',
@@ -92,9 +164,9 @@ const Header = ({ siteTitle, background, signIn, signOut, isAuthed }) => {
         text={isAuthed ? 'Sign Out' : 'Sign in with Google'}
       />
     </div>
-  </div> */}
+  </div> */
 
-Header.defaultProps = {
+/* Header.defaultProps = {
   background: BACKGROUND
 };
 
@@ -105,5 +177,5 @@ Header.propTypes = {
   siteTitle: PropTypes.string,
   isAuthed: PropTypes.bool
 };
-
+ */
 export default Header

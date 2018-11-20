@@ -17,6 +17,15 @@ import Button from '@material-ui/core/Button';
 const styles = () => ({
   root: {
     flexGrow: 1,
+  },
+
+  h3: {
+    marginTop: '0.5rem',
+  },
+
+  list: {
+    height: '60vh',
+    overflow: 'scroll'
   }
 })
 
@@ -31,8 +40,9 @@ class NewGame extends Component {
   state = {
     startingList: [],
     subList: [],
-    title: '',
-    date: ''
+    opponent: '',
+    date: (new Date()).toISOString().substring(0, 10),
+    homeOrAway: 'home',
   }
 
   groupByPosition = (players) => {
@@ -85,15 +95,23 @@ class NewGame extends Component {
     })
   }
 
+  handleFieldChange = (e, property) => {
+    const value = e.target.value;
+    this.setState({
+      [property]: value
+    })
+  }
+
   render() {
     const { allPlayers, classes } = this.props;
     const {
       startingList,
       subList,
-      title,
-      date
+      opponent,
+      date,
+      homeOrAway
     } = this.state;
-    console.log(startingList);
+    console.log(this.state);
 
     const groupedPlayers = this.groupByPosition(allPlayers);
     return(
@@ -103,15 +121,16 @@ class NewGame extends Component {
             <TextField
               id="opponent-team"
               label="Opponent"
-              className={classes.textField}
-              value={''}
+              value={opponent}
+              onChange={(e) => this.handleFieldChange(e, 'opponent')}
               fullWidth
               margin="normal"
             />
           </Grid>
           <Grid item xs={6}>
             <Select
-              value={''}
+              value={homeOrAway}
+              onChange={(e) => this.handleFieldChange(e, 'homeOrAway')}
               inputProps={{
                 name: 'home-away',
                 id: 'home-away-select',
@@ -126,17 +145,17 @@ class NewGame extends Component {
             <TextField
               id="date"
               type="date"
-              defaultValue="2017-05-24"
+              defaultValue={date}
+              onChange={ (e) => {this.handleFieldChange(e, 'date')}}
               fullWidth
-              className={classes.textField}
             />
           </Grid>
           <Grid item xs={6}>
             {
               allPlayers.length > 0 ?
               (
-                <List>
-                  <h3>Full Squad</h3>
+                <List className={classes.list}>
+                  <h3 className={classes.h3}>Full Squad</h3>
                   {
                     this.order.map(position => (
                       <li key={`position-${position}`}>
