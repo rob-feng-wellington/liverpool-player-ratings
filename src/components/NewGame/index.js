@@ -13,10 +13,19 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = () => ({
   root: {
     flexGrow: 1,
+    height: 'inherit',
+  },
+
+  loadingWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
   },
 
   h3: {
@@ -25,7 +34,7 @@ const styles = () => ({
 
   list: {
     height: '60vh',
-    overflow: 'scroll'
+    overflowY: 'scroll'
   }
 })
 
@@ -43,6 +52,7 @@ class NewGame extends Component {
     opponent: '',
     date: (new Date()).toISOString().substring(0, 10),
     homeOrAway: 'home',
+    isSubmiting: false
   }
 
   groupByPosition = (players) => {
@@ -102,6 +112,14 @@ class NewGame extends Component {
     })
   }
 
+  handleSubmit = (e) => {
+    e.preventDefault();
+    // do validation
+    this.setState({
+      isSubmiting: true
+    })
+  }
+
   render() {
     const { allPlayers, classes } = this.props;
     const {
@@ -109,13 +127,28 @@ class NewGame extends Component {
       subList,
       opponent,
       date,
-      homeOrAway
+      homeOrAway,
+      isSubmiting
     } = this.state;
-    console.log(this.state);
+    
+    const loadingDom = (
+      <div className={classes.loadingWrapper}>
+        <CircularProgress />
+      </div>
+    )
 
     const groupedPlayers = this.groupByPosition(allPlayers);
-    return(
+    
+    return (
       <form className={classes.root} onSubmit={this.handleSubmit}>
+      {
+        isSubmiting ?
+        <div style={{
+          height: '50vh'
+        }}>
+          { loadingDom }
+        </div>
+        :
         <Grid container spacing={32}>
           <Grid item xs={12}>
             <TextField
@@ -160,7 +193,7 @@ class NewGame extends Component {
                     this.order.map(position => (
                       <li key={`position-${position}`}>
                         <ul>
-                          <ListSubheader>{position}</ListSubheader>
+                          <ListSubheader>{`POSITION: ${position}`}</ListSubheader>
                           {
                             groupedPlayers[position].map(player => (
                               <ListItem key={player.id}>
@@ -186,7 +219,7 @@ class NewGame extends Component {
                 </List>
               )
               :
-              <div>loading</div>
+              loadingDom
             }    
           </Grid>
           <Grid item xs={6}>
@@ -226,6 +259,7 @@ class NewGame extends Component {
             </Button>
           </Grid>
         </Grid>
+      }
       </form>
     )
   }
