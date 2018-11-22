@@ -11,30 +11,34 @@ class NewGamePage extends Component {
   state = {
     allPlayers: [],
     loading: true,
-    title: '',
-    date: '',
   }
 
   componentDidMount() {
     const squadRef = this.context.firebase.squad;
-    squadRef.orderBy('number').get().then((querySnapshot) => {
-      const allSquads = querySnapshot.docs.map(doc => {
-        const player = doc.data();
-        player.id = doc.id;
-        return player;
+    squadRef
+      .orderBy('number')
+      .get()
+      .then((querySnapshot) => {
+        const allSquads = querySnapshot.docs.map(doc => {
+          const player = doc.data();
+          player.id = doc.id;
+          return player;
+        });
+
+        this.setState({
+          allPlayers: allSquads
+        });
+      })
+      .catch((error) => {
+          console.log("Error getting documents: ", error);
       });
-      this.setState({allPlayers: allSquads});
-    })
-    .catch(function(error) {
-        console.log("Error getting documents: ", error);
-    });
   }
 
   render() {
-    const { allPlayers, title, date } = this.state;
+    const { allPlayers } = this.state;
     return (
       <Layout>
-        <NewGame allPlayers={allPlayers} title={title} date={date} />
+        <NewGame allPlayers={allPlayers}/>
       </Layout>
     )
   }

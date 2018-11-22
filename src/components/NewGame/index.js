@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -11,34 +11,42 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import InputLabel from '@material-ui/core/InputLabel';
 import Button from '@material-ui/core/Button';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import Loading from '../loading';
 
-const styles = () => ({
+const styles = theme => ({
   root: {
     flexGrow: 1,
     height: 'inherit',
   },
 
-  loadingWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100%',
-  },
-
   h3: {
     marginTop: '0.5rem',
+    marginLeft: '0.5rem'
   },
 
   list: {
-    height: '60vh',
-    overflowY: 'scroll'
-  }
+    maxHeight: '60vh',
+    overflowY: 'auto',
+    background: theme.palette.background.paper,
+    position: 'relative',
+  },
+
+  listSection: {
+    backgroundColor: 'inherit',
+  },
+
+  ul: {
+    backgroundColor: 'inherit',
+    padding: 0,
+  },
 })
 
 class NewGame extends Component {
+  static contextTypes = {
+    firebase: PropTypes.object
+  };
+
   static propTypes = {
     allPlayers: PropTypes.array.isRequired,
     classes: PropTypes.object.isRequired
@@ -52,7 +60,9 @@ class NewGame extends Component {
     opponent: '',
     date: (new Date()).toISOString().substring(0, 10),
     homeOrAway: 'home',
-    isSubmiting: false
+    image: '',
+    isSubmiting: false,
+    errorMessages: []
   }
 
   groupByPosition = (players) => {
@@ -112,12 +122,93 @@ class NewGame extends Component {
     })
   }
 
+  uploadImage = (e) => {
+    const image = e.target.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(image);
+    reader.onload = () => {
+      this.setState({
+        image : reader.result
+      })
+    }
+  }
+
   handleSubmit = (e) => {
     e.preventDefault();
-    // do validation
+
     this.setState({
       isSubmiting: true
     })
+
+    // do validation
+    const validateErrors = this.validateGame();
+    
+    if (validateErrors.length > 0) {
+      //validation errors
+      this.setState({
+        errorMessages: validateErrors,
+        isSubmiting: false
+      })
+    } else {
+      // submit result
+      const {
+        opponent,
+        date,
+        homeOrAway,
+        image,
+        startingList,
+        subList
+      } = this.state;
+      const gamesRef = this.context.firebase.games;
+      gamesRef
+        .add({ 
+          opponent,
+          date,
+          homeOrAway,
+          image,
+          startingList,
+          subList
+        })
+        .then((docRef) => {
+          console.log(`Game save successfully Game id: ${docRef.id}`);
+        })
+        .catch(function(error) {
+          //handle error
+        })
+    }
+  }
+
+  validateGame() {
+    const errorMessages = [];
+    
+    const {
+      startingList,
+      subList,
+      opponent,
+      date,
+      homeOrAway,
+    } = this.state;
+
+    if( !opponent ) {
+      errorMessages.push('Did we really played without an opponent?');
+    }
+    if( !homeOrAway ) {
+      errorMessages.push('Home or away have to choose one')
+    }
+    if( !date ) {
+      errorMessages.push('The game played at mysterious date?')
+    }
+    if( startingList.length !== 11 ) {
+      errorMessages.push(`Starting with ${startingList.length} players, really?`)
+    }
+    if( subList.length > 3 ) {
+      errorMessages.push(`Ref allowed us to have ${subList.length} subs? I cannot believe it`)
+    }
+    if( startingList.filter(player=>player.position==='GK').length>1 ){
+      errorMessages.push(`More than 1 GKs in starting line-up....`)
+    }
+
+    return errorMessages;
   }
 
   render() {
@@ -128,14 +219,10 @@ class NewGame extends Component {
       opponent,
       date,
       homeOrAway,
-      isSubmiting
+      image,
+      isSubmiting,
+      errorMessages
     } = this.state;
-    
-    const loadingDom = (
-      <div className={classes.loadingWrapper}>
-        <CircularProgress />
-      </div>
-    )
 
     const groupedPlayers = this.groupByPosition(allPlayers);
     
@@ -146,10 +233,30 @@ class NewGame extends Component {
         <div style={{
           height: '50vh'
         }}>
-          { loadingDom }
+          <Loading />
         </div>
         :
         <Grid container spacing={32}>
+          {
+            errorMessages.length > 0 ?
+            <Grid item xs={12}>
+              <List>
+                {
+                  errorMessages.map(error=>(
+                    <ListItem>
+                      <ListItemText primary={error} style={{
+                        primary: {
+                          color: 'red'
+                        }
+                      }}/>
+                    </ListItem>
+                  ))
+                }
+              </List>
+            </Grid>
+            :
+            null
+          }
           <Grid item xs={12}>
             <TextField
               id="opponent-team"
@@ -183,20 +290,45 @@ class NewGame extends Component {
               fullWidth
             />
           </Grid>
+          <Grid item xs={12}>
+            <input
+              accept="image/*"
+              id="game-image-upload"
+              type="file"
+              onChange={this.uploadImage}
+              style={{
+                display: 'none'
+              }}
+            />
+            <label htmlFor="game-image-upload">
+              <Button variant="outlined" component="span">
+                Upload
+              </Button>
+            </label>
+            {
+              image ?
+              <img src={image} />
+              :
+              null
+            }
+          </Grid>
           <Grid item xs={6}>
             {
               allPlayers.length > 0 ?
               (
-                <List className={classes.list}>
+                <List className={classes.list} disablePadding={true}>
                   <h3 className={classes.h3}>Full Squad</h3>
                   {
                     this.order.map(position => (
-                      <li key={`position-${position}`}>
-                        <ul>
+                      <li key={`position-${position}`} className={classes.listSection}>
+                        <ul className={classes.ul}>
                           <ListSubheader>{`POSITION: ${position}`}</ListSubheader>
                           {
                             groupedPlayers[position].map(player => (
-                              <ListItem key={player.id}>
+                              <ListItem key={player.id} style={{
+                                listStyleType: 'none',
+                                padding: 0,
+                              }}>
                                 <ListItemText primary={player.number} />
                                 <ListItemText primary={player.name} />
                                 <ListItemSecondaryAction>
@@ -219,12 +351,12 @@ class NewGame extends Component {
                 </List>
               )
               :
-              loadingDom
+              <Loading />
             }    
           </Grid>
           <Grid item xs={6}>
             <List>
-              <h3>Line-up</h3>
+              <h3 className={classes.h3}>Line-up</h3>
               <ListSubheader>Starting line-up</ListSubheader>
               <ul>
               {

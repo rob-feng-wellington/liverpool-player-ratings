@@ -22,6 +22,10 @@ class Firebase {
   get squad() {
     return this.store.collection('squad');
   }
+
+  get games() {
+    return this.store.collection('games');
+  }
 }
 
 export default new Firebase();
