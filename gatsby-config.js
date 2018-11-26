@@ -42,5 +42,9 @@ module.exports = {
         // Add any options here
       },
     },
+    {
+      resolve: `gatsby-plugin-create-client-paths`,
+      options: { prefixes: [`/game/*`] },
+    },
   ],
 }

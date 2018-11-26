@@ -38,6 +38,7 @@ class Home extends Component {
               {
                 allGames.map(game => (
                   <GameCard 
+                    key={game.id}
                     opponent={game.opponent}
                     date={game.date}
                     homeOrAway={game.homeOrAway}
