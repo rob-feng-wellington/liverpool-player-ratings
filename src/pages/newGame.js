@@ -38,7 +38,11 @@ class NewGamePage extends Component {
     const { allPlayers } = this.state;
     return (
       <Layout>
-        <NewGame allPlayers={allPlayers}/>
+        {
+          () => (
+            <NewGame allPlayers={allPlayers}/>
+          )
+        }
       </Layout>
     )
   }

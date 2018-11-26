@@ -8,7 +8,7 @@ import Header from './header'
 import Auth from '../containers/Auth'
 
 
-const Layout = ({ children }) => (
+const Layout = ({ children, ...props }) => (
   <StaticQuery
     query={graphql`
       query SiteTitleQuery {
@@ -44,20 +44,22 @@ const Layout = ({ children }) => (
                     padding: `${rhythm(1.5)} ${rhythm(3 / 4)}`,
                     paddingTop: 0,
                   }}>
-                  {children}
+                  {children({
+                    ...props,
+                    ...auth,
+                  })}
                 </div>
               </div>
             )
           }
         }
-        
       </Auth>
     )}
   />
 )
 
 Layout.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.func.isRequired,
 }
 
 export default Layout

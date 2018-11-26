@@ -27,8 +27,7 @@ class Home extends Component {
   }
 
   render() {
-    const { allGames, classes } = this.props;
-
+    const { allGames, classes, isAuthed, uid } = this.props;
     return (
       <div className={classes.root}>
           <Grid container spacing={32}>
@@ -43,6 +42,7 @@ class Home extends Component {
                     date={game.date}
                     homeOrAway={game.homeOrAway}
                     image={game.image}
+                    isAuthed={isAuthed}
                   />
                 ))
               }

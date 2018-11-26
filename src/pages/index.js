@@ -37,7 +37,15 @@ class IndexPage extends Component {
   render() {
     return (
       <Layout>
-        <Home allGames={this.state.allGames} />
+        {
+          auth => (
+            <Home 
+              allGames={this.state.allGames} 
+              isAuthed={auth.isAuthed} 
+              uid={auth.uid} 
+            />
+          )
+        }
       </Layout>
     )
   }
