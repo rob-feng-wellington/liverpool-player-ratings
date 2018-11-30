@@ -44,7 +44,7 @@ class Header extends Component {
       <div>
         <AppBar position="static">
           <Toolbar>
-            <Typography variant="h6" color="inherit" style={{
+            <Typography component="h6" color="inherit" style={{
               flexGrow: 1,
             }}>
               {siteTitle}
@@ -84,98 +84,4 @@ class Header extends Component {
   }
 }
 
-
-
-/* const Header = ({ siteTitle, background, signIn, signOut, isAuthed }) => {
-  const handleMenu = (e) => {
-
-  }
-
-  const handleClose = (e) => {
-
-  }
-  return (
-    <div>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" color="inherit" style={{
-            flexGrow: 1,
-          }}>
-            {siteTitle}
-          </Typography>
-          <div>
-            <IconButton
-              aria-owns={open ? 'menu-appbar' : undefined}
-              aria-haspopup="true"
-              onClick={handleMenu}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={open}
-              onClose={handleClose}
-            >
-              <MenuItem onClick={handleClose}>Profile</MenuItem>
-              <MenuItem onClick={handleClose}>My account</MenuItem>
-            </Menu>
-          </div>
-          <Button color="inherit">Login</Button>
-        </Toolbar>
-      </AppBar>
-    </div>
-  )
-} */
-
-  /* <div
-    style={{
-      background: 'rebeccapurple',
-      marginBottom: '1.45rem',
-    }}>
-    <div
-      style={{
-        margin: '0 auto',
-        maxWidth: 960,
-        padding: '1.45rem 1.0875rem',
-      }}>
-      <h1 style={{ margin: 0 }}>
-        <Link
-          to="/"
-          style={{
-            color: 'white',
-            textDecoration: 'none',
-          }}>
-          {siteTitle}
-        </Link>
-      </h1>
-      <SignIn
-        onClick={() => (isAuthed ? signOut() : signIn('google'))}
-        icon={isAuthed ? null : <GoogleIcon />}
-        text={isAuthed ? 'Sign Out' : 'Sign in with Google'}
-      />
-    </div>
-  </div> */
-
-/* Header.defaultProps = {
-  background: BACKGROUND
-};
-
-Header.propTypes = {
-  background: PropTypes.string,
-  signIn: PropTypes.func.isRequired,
-  signOut: PropTypes.func.isRequired,
-  siteTitle: PropTypes.string,
-  isAuthed: PropTypes.bool
-};
- */
 export default Header

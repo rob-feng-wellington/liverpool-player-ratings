@@ -6,8 +6,7 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import Typography from '@material-ui/core/Typography';
-
-const ourTeam = 'Liverpool';
+import { OUR_TEAM } from '../../utils/Constant';
 
 const styles = theme => ({
   root: {
@@ -41,18 +40,18 @@ const GameCard = props => {
         <Grid item xs={12} sm container>
           <Grid item xs container direction="column" spacing={16}>
             <Grid item xs>
-              <Typography gutterBottom variant="subtitle1">
+              <Typography gutterBottom component="subtitle1">
                 {
                   homeOrAway === 'home' ?
-                  `${ourTeam} vs ${opponent}`
+                  `${OUR_TEAM} vs ${opponent}`
                   :
-                  `${opponent} vs ${ourTeam}`
+                  `${opponent} vs ${OUR_TEAM}`
                 }
               </Typography>
-              <Typography gutterBottom>{`When: ${date}`}</Typography>
+              <Typography component="subtitle1" gutterBottom>{`When: ${date}`}</Typography>
             </Grid>
             <Grid item>
-              <Typography style={{ cursor: 'pointer' }}>Rate</Typography>
+              <Typography component="subtitle1" style={{ cursor: 'pointer' }}>Rate</Typography>
             </Grid>
           </Grid>
         </Grid>

@@ -6,6 +6,7 @@
   "dependencies": {
     "@material-ui/core": "^3.5.1",
     "@material-ui/icons": "^3.0.1",
+    "@material-ui/lab": "^3.0.0-alpha.24",
     "@wapps/gatsby-plugin-material-ui": "^1.1.0",
     "babel-plugin-styled-components": "^1.8.0",
     "gatsby": "^2.0.19",
