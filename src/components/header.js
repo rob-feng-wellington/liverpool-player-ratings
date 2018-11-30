@@ -14,6 +14,42 @@ import IconButton from '@material-ui/core/IconButton';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import { Dialog, DialogTitle, ListItem } from '@material-ui/core';
+
+class LoginDialog extends Component {
+  handleClose = () => {
+    this.props.onClose(this.props.selectedValue);
+  }
+
+  handleListItemClick = value => {
+    this.props.onClose(value);
+  }
+
+  render() {
+    const { classes, onClose, selectedValue, ...other } = this.props;
+    return (
+      <Dialog onClose={this.handleClose} aria-labelledby="login-form" {...other}>
+        <DialogTitle>Plese login</DialogTitle>
+        <div>
+          <list>
+            <ListItem button onClick={() => this.handleListItemClick()}>
+              <SignIn
+                onClick={() => (isAuthed ? signOut() : signIn('google'))}
+                icon={isAuthed ? null : <GoogleIcon />}
+                text={isAuthed ? 'Sign Out' : 'Sign in with Google'}
+              />
+            </ListItem>
+          </list>
+        </div>
+      </Dialog>
+    )
+  }
+
+
+
+}
+
+
 
 class Header extends Component {
   static propTypes = {
@@ -76,7 +112,6 @@ class Header extends Component {
                 <MenuItem onClick={this.handleClose}>My account</MenuItem>
               </Menu>
             </div>
-            <Button color="inherit">Login</Button>
           </Toolbar>
         </AppBar>
       </div>
