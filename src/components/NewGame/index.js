@@ -13,6 +13,8 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import Loading from '../loading';
+import { POSITIONS_ORDER } from '../../utils/Constant';
+import { groupByPosition } from '../../utils/utils';
 
 const styles = theme => ({
   root: {
@@ -51,8 +53,6 @@ class NewGame extends Component {
     allPlayers: PropTypes.array.isRequired,
     classes: PropTypes.object.isRequired
   }
-  
-  order = ['GK', 'DF', 'MF', 'FW'];
 
   state = {
     startingList: [],
@@ -63,16 +63,6 @@ class NewGame extends Component {
     image: '',
     isSubmiting: false,
     errorMessages: []
-  }
-
-  groupByPosition = (players) => {
-    return players.reduce(
-      (accum, current) => {
-        (accum[current.position] = accum[current.position] || []).push(current);
-        return accum;
-      }, 
-      {}
-    )
   }
 
   getPlayerById = (playerId) => {
@@ -224,7 +214,7 @@ class NewGame extends Component {
       errorMessages
     } = this.state;
 
-    const groupedPlayers = this.groupByPosition(allPlayers);
+    const groupedPlayers = groupByPosition(allPlayers);
     
     return (
       <form className={classes.root} onSubmit={this.handleSubmit}>
@@ -319,7 +309,7 @@ class NewGame extends Component {
                 <List className={classes.list} disablePadding={true}>
                   <h3 className={classes.h3}>Full Squad</h3>
                   {
-                    this.order.map(position => (
+                    POSITIONS_ORDER.map(position => (
                       <li key={`position-${position}`} className={classes.listSection}>
                         <ul className={classes.ul}>
                           <ListSubheader>{`POSITION: ${position}`}</ListSubheader>

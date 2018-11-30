@@ -39,7 +39,7 @@ module.exports = {
     {
       resolve: `@wapps/gatsby-plugin-material-ui`,
       options: {
-        // Add any options here
+        pathToTheme: 'src/utils/theme', // Does not seem to work
       },
     },
     {
