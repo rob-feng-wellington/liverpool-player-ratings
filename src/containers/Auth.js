@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 const INITIAL_STATE = {
   uid: '',
   isAnonymous: null,
-  //email: ''
+  email: ''
 };
 
 class Auth extends React.Component {
@@ -66,11 +66,12 @@ class Auth extends React.Component {
   };
 
   signIn = (user) => {
-    const { uid, isAnonymous } = user;
-    
+    const { uid, isAnonymous, email } = user;
+    console.log('user =>', user);
     this.setState({
       uid,
-      isAnonymous
+      isAnonymous,
+      email
     });
   }
 
@@ -80,7 +81,7 @@ class Auth extends React.Component {
 
   render() {
     const isAuthed = !!(this.state.uid && !this.state.isAnonymous);
-
+    console.log('isAuthed =>', isAuthed);
     return this.props.children({
       ...this.state,
       signIn: this.handleSignIn,

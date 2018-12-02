@@ -14,7 +14,7 @@ import IconButton from '@material-ui/core/IconButton';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import { Dialog, DialogTitle, ListItem } from '@material-ui/core';
+import { Dialog, DialogTitle, List, ListItem } from '@material-ui/core';
 
 class LoginDialog extends Component {
   handleClose = () => {
@@ -31,24 +31,21 @@ class LoginDialog extends Component {
       <Dialog onClose={this.handleClose} aria-labelledby="login-form" {...other}>
         <DialogTitle>Plese login</DialogTitle>
         <div>
-          <list>
-            <ListItem button onClick={() => this.handleListItemClick()}>
+          <List>
+            <ListItem>
               <SignIn
-                onClick={() => (isAuthed ? signOut() : signIn('google'))}
-                icon={isAuthed ? null : <GoogleIcon />}
-                text={isAuthed ? 'Sign Out' : 'Sign in with Google'}
+                onClick={() => this.handleListItemClick('google')}
+                icon={<GoogleIcon />}
+                text={'Sign in with Google'}
               />
             </ListItem>
-          </list>
+
+          </List>
         </div>
       </Dialog>
     )
   }
-
-
-
 }
-
 
 
 class Header extends Component {
@@ -60,21 +57,27 @@ class Header extends Component {
   }
 
   state = {
-    anchorEl: null,
+    signInDialogIsOpen: false,
+    signUpDialogIsOpen: false
   }
 
-  handleMenu = (e) => {
-
+  handleClickOpenLogin = () => {
+    this.setState({
+      signInDialogIsOpen: true
+    })
   }
 
-  handleClose = (e) => {
-
+  handleLoginDialogClose = signinOption => {
+    if (signinOption === 'google') {
+      this.props.signIn('google')
+    }
+    this.setState({
+      signInDialogIsOpen: false
+    })
   }
 
   render() {
-    const { signIn, signOut, siteTitle, isAuthed } = this.props;
-    const { anchorEl } = this.state;
-    const open = Boolean(anchorEl);
+    const { signIn, signOut, siteTitle, isAuthed, email } = this.props;
 
     return (
       <div>
@@ -85,33 +88,34 @@ class Header extends Component {
             }}>
               {siteTitle}
             </Typography>
-            <div>
-              <IconButton
-                aria-owns={open ? 'menu-appbar' : undefined}
-                aria-haspopup="true"
-                onClick={this.handleMenu}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={open}
-                onClose={this.handleClose}
-              >
-                <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-                <MenuItem onClick={this.handleClose}>My account</MenuItem>
-              </Menu>
-            </div>
+            {
+              isAuthed ?
+              <div>
+                Welcome {email}
+                <Button color="inherit" onClick={this.props.signOut}>
+                  Logout
+                </Button>
+              </div>
+              :
+              <div>
+                <Button 
+                  color="inherit"
+                  onClick={this.handleClickOpenLogin}
+                >
+                  Login
+                </Button>
+                <LoginDialog
+                  open={this.state.signInDialogIsOpen}
+                  onClose={this.handleLoginDialogClose}
+                />
+                <Button
+                  color="inherit"
+                  onClick={this.handleClickOpenSignup}
+                >
+                  SignUp
+                </Button>
+              </div>
+            }
           </Toolbar>
         </AppBar>
       </div>

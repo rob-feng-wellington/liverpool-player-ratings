@@ -40,7 +40,7 @@ const GameCard = props => {
         <Grid item xs={12} sm container>
           <Grid item xs container direction="column" spacing={16}>
             <Grid item xs>
-              <Typography gutterBottom component="subtitle1">
+              <Typography component="h6" gutterBottom>
                 {
                   homeOrAway === 'home' ?
                   `${OUR_TEAM} vs ${opponent}`
@@ -48,10 +48,10 @@ const GameCard = props => {
                   `${opponent} vs ${OUR_TEAM}`
                 }
               </Typography>
-              <Typography component="subtitle1" gutterBottom>{`When: ${date}`}</Typography>
+              <Typography component="h6" gutterBottom>{`When: ${date}`}</Typography>
             </Grid>
             <Grid item>
-              <Typography component="subtitle1" style={{ cursor: 'pointer' }}>Rate</Typography>
+              <Typography component="h6" style={{ cursor: 'pointer' }}>Rate</Typography>
             </Grid>
           </Grid>
         </Grid>

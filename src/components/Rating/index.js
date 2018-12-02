@@ -69,7 +69,7 @@ class Rating extends Component {
               <Typography component="h4" gutterBottom>
                 {this.getTitle()}
               </Typography>
-              <Typography component="subtitle1" gutterBottom>
+              <Typography variant="subtitle1" gutterBottom>
                 {this.getSubTitle()}
               </Typography>
             </div>
@@ -83,9 +83,9 @@ class Rating extends Component {
                       <ListItemText primary={player.number} />
                       <ListItemText primary={player.name} />
                       <ListItemSecondaryAction>
-                        <Typography component="subtitle1">Your rating</Typography>
+                        <Typography variant="subtitle1">Your rating</Typography>
                         <Slider value={DEFAULT_RATING} min={0} max={10} step={0.5} />
-                        <Typography component="subtitle1">Average rating</Typography>
+                        <Typography variant="subtitle1">Average rating</Typography>
                         <Slider value={ratingsAverge[player.id]} min={0} max={10} step={0.1} />
                       </ListItemSecondaryAction>
                     </ListItem>
