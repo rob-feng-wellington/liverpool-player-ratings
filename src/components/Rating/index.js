@@ -7,7 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/lab/Slider';
 
-import { OUR_TEAM, POSITIONS_ORDER, DEFAULT_RATING } from '../../utils/Constant';
+import { POSITIONS_ORDER, DEFAULT_RATING } from '../../utils/Constant';
 import { groupByPosition } from '../../utils/utils';
 
 const styles = theme => ({
@@ -31,7 +31,11 @@ const styles = theme => ({
 class Rating extends Component {
   static propTypes = {
     loading: PropTypes.bool,
-    game: PropTypes.object,
+    title: PropTypes.string,
+    image: PropTypes.string,
+    date: PropTypes.string,
+    startingList: PropTypes.array,
+    subList: PropTypes.array,
     ratingsCount: PropTypes.number,
     ratingsAverge: PropTypes.object,
     hasRated: PropTypes.bool,
@@ -42,32 +46,25 @@ class Rating extends Component {
     myRatings: {}
   }
 
-  getTitle = () => {
-    const { game } = this.props;
-    return game.homeOrAway === 'home'?
-      `${OUR_TEAM} ${game.score} ${game.opponent}` :
-      `${game.opponent} ${game.score} ${OUR_TEAM}`;
-  }
-
   getSubTitle = () => {
-    const { game } = this.props;
-    return `Played at ${game.date}`;
+    const { date } = this.props;
+    return `Played at ${date}`;
   }
 
   render() {
-    const { game } = this.props;
-    const startingGroupedPlayers = groupByPosition(game.startingList);
-    const subGroupedPlayers = groupByPosition(game.subList);
+    const { title, startingList, subList, image } = this.props;
+    const startingGroupedPlayers = groupByPosition(startingList);
+    const subGroupedPlayers = groupByPosition(subList);
     return (
       <Paper className={classes.root}>
         <Grid container spacing={32}>
           <Grid item xs={12}>
             <div className={classes.imageWrapper}>
-              <img alt={`vs ${game.opponent}`} src={game.image} />
+              <img alt={title} src={image} />
             </div>
             <div className={classes.titleWrapper}>
               <Typography component="h4" gutterBottom>
-                {this.getTitle()}
+                {title}
               </Typography>
               <Typography variant="subtitle1" gutterBottom>
                 {this.getSubTitle()}
@@ -99,27 +96,5 @@ class Rating extends Component {
     )
   }
 }
-
-/* 
-const Rating = ({loading, game, players, ratings, hasRated, onRating, classes}) => {
-  return (
-    <Paper className={classes.root}>
-      <Grid container spacing={32}>
-        <Grid item xs={12}>
-          rating
-        </Grid>
-      </Grid>
-    </Paper>
-  )
-}
-
-Rating.propTypes = {
-  loading: PropTypes.bool,
-  game: PropTypes.object,
-  players: PropTypes.array,
-  ratings: PropTypes.array,
-  hasRated: PropTypes.bool,
-  onRate: PropTypes.func
-} */
 
 export default withStyles(styles)(Rating);
