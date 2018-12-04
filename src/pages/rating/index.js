@@ -1,26 +1,27 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Rating from '../../containers/Rating';
+import Home from '../../components/Home';
 
-import { BrowserRouter, Route, Redirect } from 'react-router-dom';
+import { Router } from "@reach/router";
 
-const RatingPage = ({uid, signIn}) => {
+import Layout from '../../components/layout';
+
+const RatingPage = (props) => {
   return (
-    <BrowserRouter
-      render={({ location }) => {
-        return (
-          <div>
-            <Route exact path="/rating/" render={() => <Redirect to="/" /> } />
-            <Route
-              location={location}
-              key={location.key}
-              path="/rating/:gameId"
-              render={props => <Rating {...props} uid={uid} signIn={signIn} />} 
-            />
-          </div>
-        )
-      }}
-    />
+    <Layout>
+      {
+        auth => {
+          console.log('auth =>', auth);
+          return (
+            <Router>
+              <Home path="/rating/" />
+              <Rating path="rating/:gameId" uid={auth.uid} signIn={auth.signIn} />
+            </Router>
+          )
+        }
+      }
+    </Layout>
   )
 }
 

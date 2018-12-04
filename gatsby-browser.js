@@ -11,8 +11,16 @@ import FirebaseProvider from './src/containers/FirebaseProvider';
 import firebase from './src/services/firebase';
 
 window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
-export const wrapRootElement = ({ element }) => (
-  <FirebaseProvider firebase={firebase}>{element}</FirebaseProvider>
-)
+
+export const wrapRootElement = ({ element }) => {
+  const ConnectedRootElement = (
+      <FirebaseProvider firebase={firebase}>
+        {element}
+      </FirebaseProvider>
+  )
+
+  return ConnectedRootElement;
+}
+
 
 

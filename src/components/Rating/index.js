@@ -6,6 +6,7 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/lab/Slider';
+import List from '@material-ui/core/List';
 
 import { POSITIONS_ORDER, DEFAULT_RATING } from '../../utils/Constant';
 import { groupByPosition } from '../../utils/utils';
@@ -30,6 +31,7 @@ const styles = theme => ({
 
 class Rating extends Component {
   static propTypes = {
+    classes: PropTypes.object,
     loading: PropTypes.bool,
     title: PropTypes.string,
     image: PropTypes.string,
@@ -52,7 +54,7 @@ class Rating extends Component {
   }
 
   render() {
-    const { title, startingList, subList, image } = this.props;
+    const { title, startingList, subList, image, classes } = this.props;
     const startingGroupedPlayers = groupByPosition(startingList);
     const subGroupedPlayers = groupByPosition(subList);
     return (
@@ -75,6 +77,7 @@ class Rating extends Component {
             <List className={classes.ratingListWrapper} disablePadding={true}>
               {
                 POSITIONS_ORDER.map(position => {
+                  if (startingGroupedPlayers[position]) {
                   startingGroupedPlayers[position].map(player => {
                     <ListItem key={player.id}>
                       <ListItemText primary={player.number} />
@@ -87,6 +90,7 @@ class Rating extends Component {
                       </ListItemSecondaryAction>
                     </ListItem>
                   })
+                  }
                 })
               }
             </List>
