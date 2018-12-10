@@ -4,6 +4,7 @@ import Rating from '../components/Rating';
 import { navigate } from "@reach/router";
 
 import { OUR_TEAM } from '../utils/Constant';
+import { resolve } from 'any-promise';
 
 class RatingContainer extends Component {
   static contextTypes = {
@@ -13,7 +14,7 @@ class RatingContainer extends Component {
   static propTypes = {
     uid: PropTypes.string,
     signIn: PropTypes.func,
-    gameId: PropTypes.string.isRequired
+    gameId: PropTypes.string
   }
 
   state = {
@@ -24,8 +25,7 @@ class RatingContainer extends Component {
   }
 
   componentDidMount() {
-    const { gameId, uid, signIn } = this.props;
-    console.log('signIn =>', signIn);
+    const { gameId, uid } = this.props;
     // id in firebase is 20 characters 
     if(gameId.length === 20) {
       if (uid) {
@@ -41,29 +41,61 @@ class RatingContainer extends Component {
         .then(doc => {
           if (doc.exists) {
             const { opponent, homeOrAway, score, image, date, startingList, subList, ratings } = doc.data();
-            const ratingsCount = ratings.length;
-/*             const ratingsAverge = [...ratings.reduce((r, o) => {
-              const key = o.player;
-              const item = r.get(key) || Object.assign({}, o, {rating: 0});
-              item.rating += o.rating;
-
-              return r.set(key, item)
-            }, new Map).values()].map(player => {
-              return {player: player.player, rating: player.rating/ratings.length}
-            })
-
-            console.log(ratingsAverge); */
+            let ratingsArr = [];
+            let ratingsCount = 0; 
             
-            this.setState({
-              loading: false,
-              title: homeOrAway === 'home' ? `${OUR_TEAM} ${score} ${opponent}` : `${opponent} ${score} ${OUR_TEAM}`,
-              image,
-              date,
-              startingList,
-              subList,
-              ratingsCount,
-              ratingAverage: {}
+            if( ratings ) {
+              // there are ratings
+              ratingsArr = Object.keys(rating).map(key=> rating[key]);
+              ratingsCount = ratings.length;
+              
+              const ratingsAverge = [...ratingsArr.reduce((r, o) => {
+                const key = o.player;
+                const item = r.get(key) || Object.assign({}, o, {rating: 0});
+                item.rating += o.rating;
+  
+                return r.set(key, item)
+              }, new Map).values()].map(player => {
+                return {player: player.player, rating: player.rating/ratingsArr.length}
+              })
+              console.log('ratingsAverge => ', ratingsAverge);
+
+            }
+
+            // playerId => player
+            this.squad.get().then(querySnapshot => {
+              const startingPlayers = querySnapshot
+                .docs
+                .filter(doc => startingList.indexOf(doc.id) > -1)
+                .map(doc => {
+                  const player = doc.data();
+                  player.id = doc.id;
+                  return player;
+                });
+
+              const subPlayers = querySnapshot
+                .docs
+                .filter(doc => subList.indexOf(doc.id) > -1)
+                .map(doc => {
+                  const player = doc.data();
+                  player.id = doc.id;
+                  return player;
+                });
+
+              this.setState({
+                loading: false,
+                title: homeOrAway === 'home' ? `${OUR_TEAM} ${score} ${opponent}` : `${opponent} ${score} ${OUR_TEAM}`,
+                image,
+                date,
+                startingList: startingPlayers,
+                subList: subPlayers,
+                ratingsCount,
+                ratingAverage: {}
+              })
+
             })
+
+
           } else {
             navigate('/404');
           }
@@ -85,6 +117,11 @@ class RatingContainer extends Component {
 
   get allRatings() {
     return this.game.collection('ratings');
+  }
+
+  get squad() {
+    const { firebase } = this.context;
+    return firebase.squad;
   }
 
   render() {

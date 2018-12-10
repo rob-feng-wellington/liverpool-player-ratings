@@ -6,7 +6,8 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/lab/Slider';
-import List from '@material-ui/core/List';
+import { List, ListItem, ListItemText, ListItemSecondaryAction } from '@material-ui/core';
+
 
 import { POSITIONS_ORDER, DEFAULT_RATING } from '../../utils/Constant';
 import { groupByPosition } from '../../utils/utils';
@@ -57,6 +58,7 @@ class Rating extends Component {
     const { title, startingList, subList, image, classes } = this.props;
     const startingGroupedPlayers = groupByPosition(startingList);
     const subGroupedPlayers = groupByPosition(subList);
+    console.log('startingGroupedPlayers => ', startingGroupedPlayers);
     return (
       <Paper className={classes.root}>
         <Grid container spacing={32}>
@@ -65,7 +67,7 @@ class Rating extends Component {
               <img alt={title} src={image} />
             </div>
             <div className={classes.titleWrapper}>
-              <Typography component="h4" gutterBottom>
+              <Typography variant="h4" component="h4" gutterBottom>
                 {title}
               </Typography>
               <Typography variant="subtitle1" gutterBottom>
@@ -78,18 +80,22 @@ class Rating extends Component {
               {
                 POSITIONS_ORDER.map(position => {
                   if (startingGroupedPlayers[position]) {
-                  startingGroupedPlayers[position].map(player => {
-                    <ListItem key={player.id}>
-                      <ListItemText primary={player.number} />
-                      <ListItemText primary={player.name} />
-                      <ListItemSecondaryAction>
-                        <Typography variant="subtitle1">Your rating</Typography>
-                        <Slider value={DEFAULT_RATING} min={0} max={10} step={0.5} />
-                        <Typography variant="subtitle1">Average rating</Typography>
-                        <Slider value={ratingsAverge[player.id]} min={0} max={10} step={0.1} />
-                      </ListItemSecondaryAction>
-                    </ListItem>
-                  })
+                    return (
+                      startingGroupedPlayers[position].map(player => {
+                        return(
+                          <ListItem key={player.id}>
+                            <ListItemText primary={player.number} />
+                            <ListItemText primary={player.name} />
+                            <ListItemSecondaryAction>
+                              <Typography variant="subtitle1">Your rating</Typography>
+                              <Slider value={DEFAULT_RATING} min={0} max={10} step={0.5} />
+                              <Typography variant="subtitle1">Average rating</Typography>
+                              {/* <Slider value={ratingsAverge[player.id]} min={0} max={10} step={0.1} /> */}
+                            </ListItemSecondaryAction>
+                          </ListItem>
+                        )
+                      })
+                    )
                   }
                 })
               }
