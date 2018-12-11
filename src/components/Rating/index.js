@@ -5,11 +5,9 @@ import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import Slider from '@material-ui/lab/Slider';
-import { List, ListItem, ListItemText, ListItemSecondaryAction } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 
-
-import { POSITIONS_ORDER, DEFAULT_RATING } from '../../utils/Constant';
+import RatingPlayerList from './playersList';
 import { groupByPosition } from '../../utils/utils';
 
 const styles = theme => ({
@@ -27,7 +25,6 @@ const styles = theme => ({
     marginLeft: '-50vw',
     marginRight: '-50vw',
   },
-
 })
 
 class Rating extends Component {
@@ -37,12 +34,13 @@ class Rating extends Component {
     title: PropTypes.string,
     image: PropTypes.string,
     date: PropTypes.string,
-    startingList: PropTypes.array,
-    subList: PropTypes.array,
+    startingPlayers: PropTypes.array,
+    subPlayers: PropTypes.array,
     ratingsCount: PropTypes.number,
     ratingsAverge: PropTypes.object,
     hasRated: PropTypes.bool,
-    onRate: PropTypes.func
+    onRate: PropTypes.func,
+    onSubmit: PropTypes.func
   }
 
   state = {
@@ -55,10 +53,10 @@ class Rating extends Component {
   }
 
   render() {
-    const { title, startingList, subList, image, classes } = this.props;
-    const startingGroupedPlayers = groupByPosition(startingList);
-    const subGroupedPlayers = groupByPosition(subList);
-    console.log('startingGroupedPlayers => ', startingGroupedPlayers);
+    const { title, startingPlayers, subPlayers, image, classes, onRate, onSubmit } = this.props;
+    const startingGroupedPlayers = groupByPosition(startingPlayers);
+    const subGroupedPlayers = groupByPosition(subPlayers);
+
     return (
       <Paper className={classes.root}>
         <Grid container spacing={32}>
@@ -76,32 +74,15 @@ class Rating extends Component {
             </div>
           </Grid>
           <Grid item xs={12}>
-            <List className={classes.ratingListWrapper} disablePadding={true}>
-              {
-                POSITIONS_ORDER.map(position => {
-                  if (startingGroupedPlayers[position]) {
-                    return (
-                      startingGroupedPlayers[position].map(player => {
-                        return(
-                          <ListItem key={player.id}>
-                            <ListItemText primary={player.number} />
-                            <ListItemText primary={player.name} />
-                            <ListItemSecondaryAction>
-                              <Typography variant="subtitle1">Your rating</Typography>
-                              <Slider value={DEFAULT_RATING} min={0} max={10} step={0.5} />
-                              <Typography variant="subtitle1">Average rating</Typography>
-                              {/* <Slider value={ratingsAverge[player.id]} min={0} max={10} step={0.1} /> */}
-                            </ListItemSecondaryAction>
-                          </ListItem>
-                        )
-                      })
-                    )
-                  }
-                })
-              }
-            </List>
+            <RatingPlayerList players={startingGroupedPlayers} onRate={onRate}/>
+          </Grid>
+          <Grid item xs={12}>
+            <RatingPlayerList players={subGroupedPlayers} onRate={onRate}/>
           </Grid>
         </Grid>
+        <Button variant="outlined" color="primary" onClick={onSubmit}>
+          Submit Ratings
+        </Button>
       </Paper>
     )
   }

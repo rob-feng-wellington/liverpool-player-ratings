@@ -34,7 +34,7 @@ class Auth extends React.Component {
     this.stopAuthListener();
   }
 
-  handleSignIn = provider => {
+  handleSignIn = (provider, email, password) => {
     const { auth } = this.context.firebase;
 
     switch (provider) {
@@ -45,6 +45,13 @@ class Auth extends React.Component {
             console.error(error);
             return error;
           });
+      case 'email':
+        return auth()
+          .signInWithEmailAndPassword(email, password)
+          .catch(error => {
+            console.error(error);
+            return error;
+          })
       case 'anonymous':
         return auth()
           .signInAnonymously()

@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Rating from '../components/Rating';
 import { navigate } from "@reach/router";
+import LoginDialog from '../components/loginDialog';
 
-import { OUR_TEAM } from '../utils/Constant';
-import { resolve } from 'any-promise';
+import { OUR_TEAM, DEFAULT_RATING } from '../utils/Constant';
 
 class RatingContainer extends Component {
   static contextTypes = {
@@ -21,7 +21,14 @@ class RatingContainer extends Component {
     hasRated: false,
     loading: true,
     myRating: {},
-    title: ''
+    title: '',
+    image: '',
+    date: '',
+    startingPlayers: [],
+    subPlayers: [],
+    ratingCount: 0,
+    ratingsAverge: new Map,
+    signInDialogIsOpen: false
   }
 
   componentDidMount() {
@@ -43,13 +50,13 @@ class RatingContainer extends Component {
             const { opponent, homeOrAway, score, image, date, startingList, subList, ratings } = doc.data();
             let ratingsArr = [];
             let ratingsCount = 0; 
-            
+            let ratingsAverge = new Map;
             if( ratings ) {
               // there are ratings
               ratingsArr = Object.keys(rating).map(key=> rating[key]);
               ratingsCount = ratings.length;
               
-              const ratingsAverge = [...ratingsArr.reduce((r, o) => {
+              ratingsAverge = [...ratingsArr.reduce((r, o) => {
                 const key = o.player;
                 const item = r.get(key) || Object.assign({}, o, {rating: 0});
                 item.rating += o.rating;
@@ -70,6 +77,7 @@ class RatingContainer extends Component {
                 .map(doc => {
                   const player = doc.data();
                   player.id = doc.id;
+                  player.rating = doc.rating || DEFAULT_RATING;
                   return player;
                 });
 
@@ -79,6 +87,7 @@ class RatingContainer extends Component {
                 .map(doc => {
                   const player = doc.data();
                   player.id = doc.id;
+                  player.rating = doc.rating || DEFAULT_RATING;
                   return player;
                 });
 
@@ -87,10 +96,10 @@ class RatingContainer extends Component {
                 title: homeOrAway === 'home' ? `${OUR_TEAM} ${score} ${opponent}` : `${opponent} ${score} ${OUR_TEAM}`,
                 image,
                 date,
-                startingList: startingPlayers,
-                subList: subPlayers,
+                startingPlayers,
+                subPlayers,
                 ratingsCount,
-                ratingAverage: {}
+                ratingsAverge,
               })
 
             })
@@ -105,6 +114,36 @@ class RatingContainer extends Component {
         })
     } else {
       navigate('/404');
+    }
+  }
+
+  handleRating = (value, playerId) => {
+    const { startingPlayers, subPlayers } = this.state;
+    const newStartingPlayers = startingPlayers.map(player => {
+      return player.id === playerId ?
+        {...player, rating: value} :
+        player
+    })
+
+    const newSubPlayers = subPlayers.map(player => {
+      return player.id === playerId ?
+        {...player, rating: value} :
+        player
+    })
+
+    this.setState({
+      startingPlayers: newStartingPlayers,
+      subPlayers: newSubPlayers
+    })
+  }
+
+  handleSubmit = () => {
+    const { uid } = this.props;
+    //if no user id at this point, need to sign in as anonymouse
+    if (!uid) {
+      this.setState({
+        signInDialogIsOpen: true
+      })
     }
   }
 
@@ -125,20 +164,30 @@ class RatingContainer extends Component {
   }
 
   render() {
-    const { loading, title, image, date, startingList, subList, ratingCount, ratingsAverge } = this.state;
+    const { loading, title, image, date, startingPlayers, subPlayers, ratingCount, ratingsAverge } = this.state;
     return loading ?
-    <div>loading...</div>
-    :
-    <Rating 
-      loading={loading}
-      title={title}
-      image={image}
-      date={date}
-      startingList={startingList}
-      subList={subList}
-      ratingCount={ratingCount}
-      ratingsAverge={ratingsAverge}
-    />
+      <div>loading...</div>
+      :
+      <>
+        <Rating 
+          loading={loading}
+          title={title}
+          image={image}
+          date={date}
+          startingPlayers={startingPlayers}
+          subPlayers={subPlayers}
+          ratingCount={ratingCount}
+          ratingsAverge={ratingsAverge}
+          onRate={this.handleRating}
+          onSubmit={this.handleSubmit}
+        />
+        <LoginDialog
+          open={this.state.signInDialogIsOpen}
+          onClose={this.handleSignIn}
+          showLogin={true}
+          showSignUp={true}
+      />
+      </>
   }
 
 }
