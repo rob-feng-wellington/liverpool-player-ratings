@@ -12,7 +12,7 @@ import { groupByPosition } from '../../utils/utils';
 
 const styles = theme => ({
   root: {
-    marginTop: '50px',
+    marginTop: '10px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center'
@@ -25,6 +25,10 @@ const styles = theme => ({
     marginLeft: '-50vw',
     marginRight: '-50vw',
   },
+  image: {
+    width: '100vw',
+    height: '20vh',
+  }
 })
 
 class Rating extends Component {
@@ -61,7 +65,7 @@ class Rating extends Component {
         <Grid container spacing={32}>
           <Grid item xs={12}>
             <div className={classes.imageWrapper}>
-              <img alt={title} src={image} />
+              <img alt={title} src={image} className={classes.image}/>
             </div>
             <div className={classes.titleWrapper}>
               <Typography variant="h4" component="h4" gutterBottom>

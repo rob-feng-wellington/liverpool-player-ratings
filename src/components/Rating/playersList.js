@@ -8,25 +8,27 @@ import { List, ListItem, ListItemText, ListItemSecondaryAction } from '@material
 import { withStyles } from '@material-ui/core/styles';
 import { POSITIONS_ORDER } from '../../utils/Constant';
 
+import './playersList.css';
+
 const styles = theme => ({
   root: {
-    marginTop: '20px'
+    marginTop: '5px'
   }
 })
 
 const RatingPlayerList = ({classes, players, onRate, ratingsAverge}) => {
   return(
-    <List className={classes.root} disablePadding={true}>
+    <List className={`${classes.root} players-list-wrapper`} disablePadding={true}>
       {
         POSITIONS_ORDER.map(position => {
           if (players[position]) {
             return (
               players[position].map(player => {
                 return(
-                  <ListItem key={player.id}>
+                  <ListItem key={player.id} className={classes.listItem}>
                     <ListItemText primary={player.number} />
                     <ListItemText primary={player.name} />
-                    <ListItemSecondaryAction>
+                    <ListItemSecondaryAction className={classes.actionWrapper}>
                       <Typography variant="subtitle1">{`Your rating: ${player.rating}`}</Typography>
                       <Slider value={player.rating} min={0} max={10} step={0.5} onChange={(e, value) => onRate(value, player.id)}/>
                       {
