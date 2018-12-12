@@ -38,7 +38,6 @@ class Rating extends Component {
     subPlayers: PropTypes.array,
     ratingsCount: PropTypes.number,
     ratingsAverge: PropTypes.object,
-    hasRated: PropTypes.bool,
     onRate: PropTypes.func,
     onSubmit: PropTypes.func
   }
@@ -53,7 +52,7 @@ class Rating extends Component {
   }
 
   render() {
-    const { title, startingPlayers, subPlayers, image, classes, onRate, onSubmit } = this.props;
+    const { title, startingPlayers, subPlayers, image, classes, onRate, onSubmit, ratingsAverge } = this.props;
     const startingGroupedPlayers = groupByPosition(startingPlayers);
     const subGroupedPlayers = groupByPosition(subPlayers);
 
@@ -74,10 +73,10 @@ class Rating extends Component {
             </div>
           </Grid>
           <Grid item xs={12}>
-            <RatingPlayerList players={startingGroupedPlayers} onRate={onRate}/>
+            <RatingPlayerList players={startingGroupedPlayers} ratingsAverge={ratingsAverge} onRate={onRate}/>
           </Grid>
           <Grid item xs={12}>
-            <RatingPlayerList players={subGroupedPlayers} onRate={onRate}/>
+            <RatingPlayerList players={subGroupedPlayers} ratingsAverge={ratingsAverge} onRate={onRate}/>
           </Grid>
         </Grid>
         <Button variant="outlined" color="primary" onClick={onSubmit}>

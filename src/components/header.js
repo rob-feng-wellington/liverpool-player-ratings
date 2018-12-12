@@ -39,13 +39,12 @@ class Header extends Component {
   }
 
   handleLoginDialogClose = (signinOption, email, password) => {
-    console.log('signinOption =>', signinOption);
-    console.log('email =>', email);
     if (signinOption === 'google') {
       this.props.signIn('google')
     } else if (signinOption === 'email') {
-      
       this.props.signIn('email', email, password)
+    } else if (signinOption === 'signup') {
+      this.props.signIn('signup', email, password)
     }
     this.setState({
       signInDialogIsOpen: false

@@ -6,7 +6,7 @@ import Slider from '@material-ui/lab/Slider';
 import { List, ListItem, ListItemText, ListItemSecondaryAction } from '@material-ui/core';
 
 import { withStyles } from '@material-ui/core/styles';
-import { POSITIONS_ORDER, DEFAULT_RATING } from '../../utils/Constant';
+import { POSITIONS_ORDER } from '../../utils/Constant';
 
 const styles = theme => ({
   root: {
@@ -14,7 +14,7 @@ const styles = theme => ({
   }
 })
 
-const RatingPlayerList = ({classes, players, onRate}) => {
+const RatingPlayerList = ({classes, players, onRate, ratingsAverge}) => {
   return(
     <List className={classes.root} disablePadding={true}>
       {
@@ -29,8 +29,16 @@ const RatingPlayerList = ({classes, players, onRate}) => {
                     <ListItemSecondaryAction>
                       <Typography variant="subtitle1">{`Your rating: ${player.rating}`}</Typography>
                       <Slider value={player.rating} min={0} max={10} step={0.5} onChange={(e, value) => onRate(value, player.id)}/>
-                      <Typography variant="subtitle1">Average rating</Typography>
-                      {/* <Slider value={ratingsAverge[player.id]} min={0} max={10} step={0.1} /> */}
+                      {
+                        ratingsAverge.get(player.id) ?
+                        <>
+                          <Typography variant="subtitle1">{`Average rating: ${parseFloat(ratingsAverge.get(player.id))}`}</Typography>
+                          <Slider value={parseFloat(ratingsAverge.get(player.id))} min={0} max={10} step={0.1} disabled/>
+                        </>
+                        :
+                        null
+                      }
+                      
                     </ListItemSecondaryAction>
                   </ListItem>
                 )
@@ -46,7 +54,8 @@ const RatingPlayerList = ({classes, players, onRate}) => {
 RatingPlayerList.propTypes = {
   classes: PropTypes.object,
   players: PropTypes.object.isRequired,
-  onRate: PropTypes.func.isRequired
+  onRate: PropTypes.func.isRequired,
+  ratingsAverge: PropTypes.instanceOf(Map).isRequired,
 }
 
 export default withStyles(styles)(RatingPlayerList);

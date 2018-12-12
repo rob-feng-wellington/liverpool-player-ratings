@@ -31,6 +31,10 @@ class LoginDialog extends Component{
     this.props.onClose('email', this.state.email.value, this.state.password.value);
   }
 
+  handleCreateUser = () => {
+    this.props.onClose('signup', this.state.addEmail.value, this.state.addPassword.value);
+  }
+
   render() {
     const { onClose, showLogin, showSignUp, ...other } = this.props;
     return (
@@ -110,6 +114,9 @@ class LoginDialog extends Component{
                   margin="normal"
                   fullWidth={true}
                 />
+                <Button variant="contained" color="primary" onClick={this.handleCreateUser}>
+                  Sign Up
+                </Button>
               </form>
             </ListItem>
           </List>
@@ -117,7 +124,7 @@ class LoginDialog extends Component{
           :
           null
         }
-        <Button variant="contained">Not right now, take me back</Button>
+        <Button variant="contained" color="primary">Not right now, take me back</Button>
       </Dialog>
     )
   }

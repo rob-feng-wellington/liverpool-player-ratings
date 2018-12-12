@@ -52,6 +52,13 @@ class Auth extends React.Component {
             console.error(error);
             return error;
           })
+      case 'signup':
+          return auth()
+            .createUserWithEmailAndPassword(email, password)
+            .catch(error => {
+              console.log(error);
+              return error;
+            })
       case 'anonymous':
         return auth()
           .signInAnonymously()
