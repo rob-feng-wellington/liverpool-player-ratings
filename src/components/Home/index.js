@@ -5,7 +5,6 @@ import { withStyles } from '@material-ui/core/styles';
 
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import Loading from '../loading';
 import GameCard from './GameCard';
 
 const styles = theme => ({
@@ -27,7 +26,7 @@ class Home extends Component {
   }
 
   render() {
-    const { allGames, classes, isAuthed, uid } = this.props;
+    const { allGames, classes, isAuthed } = this.props;
     return (
       <div className={classes.root}>
           <Grid container spacing={32}>
@@ -52,6 +51,10 @@ class Home extends Component {
         </div>
     )
   }
+}
+
+Home.defaultProps = {
+  allGames: []
 }
 
 export default withStyles(styles)(Home)
