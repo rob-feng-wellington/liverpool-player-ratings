@@ -92,7 +92,6 @@ class RatingContainer extends Component {
                 totalRatings.forEach((value, key) => {
                   ratingsAverge.set(key, (value/ratings.size).toFixed(1));
                 })
-                console.log('ratingsAverge =>', ratingsAverge);
               }
               // playerId => player
               this.squad.get().then(querySnapshot => {
