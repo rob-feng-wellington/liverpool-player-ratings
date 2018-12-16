@@ -26,6 +26,10 @@ class Firebase {
   get games() {
     return this.store.collection('games');
   }
+
+  get ratings() {
+    return this.store.collection('ratings');
+  }
 }
 
 export default new Firebase();

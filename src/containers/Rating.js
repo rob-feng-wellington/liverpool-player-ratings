@@ -39,7 +39,7 @@ class RatingContainer extends Component {
         loading: true,
       });
 
-      this.initialProcess = this.doInitialDataFetch(gameId, uid).then(newState => {
+      this.initialProcess = this.doInitialDataFetch(gameId).then(newState => {
         this.setState(newState);
         return newState;
       })
@@ -63,14 +63,17 @@ class RatingContainer extends Component {
 
   }
 
-  doInitialDataFetch = () => {
+  doInitialDataFetch = (gameId) => {
     return new Promise((resolve, reject) => {
       this.game
         .get()
         .then(doc => {
           if (doc.exists) {
             const { opponent, homeOrAway, score, image, date, startingList, subList } = doc.data();
-            this.game.collection('ratings').get().then((querySnapshot) => {
+            this.allRatings
+            .where('gameId', '==', gameId)
+            .get()
+            .then((querySnapshot) => {
               const ratings = new Map;
               querySnapshot.forEach(doc => {
                 ratings.set(doc.id, doc.data())
@@ -81,7 +84,9 @@ class RatingContainer extends Component {
               let myRating = new Map;
               if(ratings.size > 0) {
                 let ratingsArr = Array.from(ratings.values());
-                let totalRatings = ratingsArr.reduce((r, o) => {
+                let totalRatings = ratingsArr.map(rating => {
+                  return rating.ratings;
+                }).reduce((r, o) => {
                   Object.keys(o).map((id) => {
                     const previousValue = r.get(id) || 0;
                     const newRate = previousValue + o[id];
@@ -131,7 +136,9 @@ class RatingContainer extends Component {
                 resolve(initialState);
               })
             })
-
+            .catch(error => {
+              console.log(error);
+            })
           } else {
             reject('error')
           }
@@ -145,7 +152,13 @@ class RatingContainer extends Component {
 
   checkMyRatings = (uid, allRatings) => {
     if (uid && allRatings.size > 0) {
-      const myRating = allRatings.get(uid);
+      const myRating = Array.from(allRatings.values()).filter(rating => {
+        return rating.uid === uid
+      }).map(rating => {
+        return rating.ratings
+      }).reduce((r, o) => {
+        return o;
+      },{});
       if(myRating) {
         const updatedStartingPlayer = this.state.startingPlayers.map(player => {
           return { ...player, rating: myRating[player.id]}
@@ -184,7 +197,7 @@ class RatingContainer extends Component {
   }
 
   handleSubmit = () => {
-    const { uid } = this.props;
+    const { gameId, uid } = this.props;
     this.setState({
       submitting: true
     })
@@ -195,12 +208,12 @@ class RatingContainer extends Component {
       })
     } else {
       // already login. Kick off submit process
-      this.doSubmit(uid);
+      this.doSubmit(gameId, uid);
 
     }
   }
 
-  doSubmit = (uid) => {
+  doSubmit = (gameId, uid) => {
     const {startingPlayers, subPlayers} = this.state;
     const myStartingRatings = startingPlayers.reduce((r, o) => {
       const key = o.id;
@@ -215,10 +228,13 @@ class RatingContainer extends Component {
       return r;
     }, myStartingRatings);
     this.allRatings
-      .doc(uid)
-      .set(finalRatings)
-      .then(() => {
-        console.log("Document successfully written!");
+      .add({
+        gameId,
+        uid,
+        ratings: finalRatings
+      })
+      .then((docRef) => {
+        console.log("Document written with ID: ", docRef.id);
       })
       .catch((error) => {
         console.error("Error writing document: ", error);
@@ -243,7 +259,9 @@ class RatingContainer extends Component {
   }
 
   get allRatings() {
-    return this.game.collection('ratings');
+    const { firebase } = this.context;
+
+    return firebase.ratings
   }
 
   get squad() {

@@ -92,6 +92,11 @@ class HomeContainer extends Component {
     return firebase.games;
   }
 
+  get ratings() {
+    const { firebase } = this.context;
+    return firebase.ratings;
+  }
+
   render() {
     return (
       <Home
