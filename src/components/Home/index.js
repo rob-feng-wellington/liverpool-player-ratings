@@ -23,7 +23,9 @@ const styles = theme => ({
 class Home extends Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    allGames: PropTypes.array.isRequired
+    allGames: PropTypes.array.isRequired,
+    ratingCounts: PropTypes.number,
+    playersRatings: PropTypes.object
   }
 
   render() {

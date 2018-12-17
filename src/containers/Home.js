@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Home from '../components/Home';
 
+import Squad from '../services/squad';
 class HomeContainer extends Component {
   static contextTypes = {
     firebase: PropTypes.object
@@ -14,7 +15,7 @@ class HomeContainer extends Component {
 
   state = {
     allGames: [],
-    myNumbers: {}
+    myNumbers: []
   }
 
   componentDidMount() {
@@ -59,32 +60,58 @@ class HomeContainer extends Component {
     })
   }
 
-  getMyNumbers = (uid, allGames) => {
-    const allMyRatings = allGames.map(game => {
-      return this.games
-        .doc(game.id)
-        .collection('ratings')
-        .doc(uid)
-        .get()
-    });
+  getMyNumbers = (uid) => {
+    this.ratings
+    .where('uid', '==', uid)
+    .get()
+    .then(querySnapshot => {
+      querySnapshot.docs.map(doc => {
+        const ratings =  doc.data().ratings;
+        Squad.getFullSquad().then(allPlayers => {
+          const fullRatingData = Object.keys(ratings).map(key => {
+            return {
+              ...{rating: ratings[key]},
+              ...allPlayers.filter(p=>p.id === key)[0]
+            }
+          });
+          
+          this.setState({
+            myNumbers: fullRatingData
+          })
 
-    Promise.all(allMyRatings).then((allRatings) => {
-      const allExistingRatings = allRatings
-        .filter(doc => {
-          return doc.exists;
         })
-        .map(doc => {
-          return {[doc.id] : doc.data()};
-        })
-        .reduce((r, o) => {
-          r[Object.keys(o)[0]] = o[Object.keys(o)[0]];
-          return r;
-        }, {})
-        
-      const ratingCount = Object.keys(allExistingRatings).length;
-      
-      
+      });
     })
+  }
+
+  getMyRatingCounts = () => {
+    const {myNumbers} = this.state;
+    return myNumbers.length;
+  }
+
+  getPlayersRatings = () => {
+    const {myNumbers} = this.state;
+    return myNumbers.length === 0 
+    ? {}
+    : this.getPlayersRatingsFromState()
+  }
+
+  getPlayersRatingsFromState = () => {
+    const {myNumbers} = this.state;
+    if(myNumbers.length === 0 ) { return []}
+    const myPlayersRatings = myNumbers.reduce((r, o) => {
+      Object.keys(o).map(playerId => {
+        const playerRating = o[playerId];
+          if (r.has(playerId)) {
+            r.set(playerId, {rating: r.get(playerId).rating + playerRating, appearance: r.get(playerId).appearance + 1})
+          } else {
+            r.set(playerId, {rating: playerRating, appearance: 1})
+          }
+      })
+      return r;
+    }, new Map);
+
+    return myPlayersRatings;
   }
 
   get games() {
@@ -102,7 +129,9 @@ class HomeContainer extends Component {
       <Home
         allGames={this.state.allGames}
         isAuthed={this.props.isAuthed} 
-        uid={this.props.uid} 
+        uid={this.props.uid}
+        ratingCounts={this.getMyRatingCounts()}
+        playersRatings={this.getPlayersRatings()}
       />
     );
   }
