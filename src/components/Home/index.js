@@ -5,6 +5,12 @@ import { withStyles } from '@material-ui/core/styles';
 
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import { Avatar } from '@material-ui/core';
+import deepOrange from '@material-ui/core/colors/deepOrange';
+import { List, ListItem, ListItemText } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
+
 import GameCard from './GameCard';
 
 const styles = theme => ({
@@ -18,6 +24,12 @@ const styles = theme => ({
     textAlign: 'center',
     color: theme.palette.text.secondary,
   },
+
+  orangeAvatar: {
+    margin: 10,
+    color: '#fff',
+    backgroundColor: deepOrange[500],
+  },
 })
 
 class Home extends Component {
@@ -25,27 +37,68 @@ class Home extends Component {
     classes: PropTypes.object.isRequired,
     allGames: PropTypes.array.isRequired,
     ratingCounts: PropTypes.number,
-    playersRatings: PropTypes.object
+    playersRatings: PropTypes.array
   }
 
   render() {
-    const { allGames, classes, isAuthed } = this.props;
+    const { classes, allGames, isAuthed, ratingCounts, playersRatings } = this.props;
+
+    const notAuthed = 
+      <div>
+        <Typography variant="h4" component="h4" >You will need to login to check your stats.</Typography>
+        <Button variant="contained" color="primary">
+          Login
+        </Button>
+      </div>
+
+    const noRating = <Typography component="h4" >Kick off your rating by click one of the games on the right</Typography>;
+
+    const stats = (
+      <>
+        <Typography component="h4" >My States</Typography>
+        <List>
+          {
+            playersRatings.map((player, key) => {
+              return (
+                <ListItem key={key}>
+                  <Avatar className={classes.orangeAvatar}>{player.number}</Avatar>
+                  <ListItemText 
+                    primary={`${player.name} -- ${player.rating}`} 
+                    secondary={`Rated: ${player.appearance} times`} />
+                </ListItem>
+              )
+            })
+          }
+        </List>
+      </>
+    )
+
     return (
       <div className={classes.root}>
         <Grid container spacing={32}>
-          <Grid item xs={4}>
-            <Paper className={classes.paper}>xs=4</Paper>
+          <Grid item xs={5}>
+            <Paper className={classes.paper}>
+              {
+                !isAuthed
+                ? notAuthed
+                : ratingCounts === 0 
+                  ? noRating
+                  : stats
+              }
+            </Paper>
           </Grid>
-          <Grid item xs={8}>
+          <Grid item xs={7}>
             {
               allGames.map(game => (
                 <GameCard 
                   key={game.id}
+                  id={game.id}
                   opponent={game.opponent}
                   date={game.date}
                   homeOrAway={game.homeOrAway}
                   image={game.image}
                   isAuthed={isAuthed}
+                  hasRated={game.hasRated || false}
                 />
               ))
             }

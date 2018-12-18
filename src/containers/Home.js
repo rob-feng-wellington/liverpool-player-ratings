@@ -65,23 +65,36 @@ class HomeContainer extends Component {
     .where('uid', '==', uid)
     .get()
     .then(querySnapshot => {
-      querySnapshot.docs.map(doc => {
-        const ratings =  doc.data().ratings;
-        Squad.getFullSquad().then(allPlayers => {
+      Squad.getFullSquad().then(allPlayers => {
+        const FinalResults = querySnapshot.docs.map(doc => {
+          const ratings = doc.data().ratings;
+
           const fullRatingData = Object.keys(ratings).map(key => {
             return {
               ...{rating: ratings[key]},
               ...allPlayers.filter(p=>p.id === key)[0]
             }
-          });
-          
-          this.setState({
-            myNumbers: fullRatingData
           })
+          return fullRatingData;
+        });
 
+        const gameRated = querySnapshot.docs.map(doc => {
+          const gameId = doc.data().gameId;
+          return gameId;
+        });
+        console.log('allGames =>', this.state.allGames);
+        const updatedGames = this.state.allGames.map(game => {
+          return { ...game, hasRated: gameRated.filter(gameId=> gameId === game.id).length > 0 }
         })
-      });
+
+        console.log('updatedGames =>', updatedGames);
+        this.setState({
+          myNumbers: FinalResults,
+          allGames: updatedGames
+        })
+      })
     })
+
   }
 
   getMyRatingCounts = () => {
@@ -92,24 +105,42 @@ class HomeContainer extends Component {
   getPlayersRatings = () => {
     const {myNumbers} = this.state;
     return myNumbers.length === 0 
-    ? {}
+    ? []
     : this.getPlayersRatingsFromState()
   }
 
   getPlayersRatingsFromState = () => {
-    const {myNumbers} = this.state;
+    const { myNumbers } = this.state;
     if(myNumbers.length === 0 ) { return []}
-    const myPlayersRatings = myNumbers.reduce((r, o) => {
-      Object.keys(o).map(playerId => {
-        const playerRating = o[playerId];
-          if (r.has(playerId)) {
-            r.set(playerId, {rating: r.get(playerId).rating + playerRating, appearance: r.get(playerId).appearance + 1})
-          } else {
-            r.set(playerId, {rating: playerRating, appearance: 1})
-          }
+    const myPlayersRatings = Array.from(myNumbers.reduce((acc, current) => {
+      current.map(playerObj => {
+        if (acc.has(playerObj.id)) {
+          acc.set(playerObj.id,
+                  {...playerObj, 
+                    rating: acc.get(playerObj.id).rating + playerObj.rating, 
+                    appearance: acc.get(playerObj.id).appearance + 1
+                  });
+        } else {
+          acc.set(playerObj.id,
+                  {...playerObj, 
+                    appearance: 1
+                  });
+        }
       })
-      return r;
-    }, new Map);
+      return acc;
+    }, new Map).values()).map(playerObj => {
+      return { ...playerObj, rating: (playerObj.rating/playerObj.appearance).toFixed(1)}
+    }).sort((a,b)=> {
+      return a.rating > b.rating
+      ? -1
+      : a.rating < b.rating
+        ? 1
+        : a.appearance > b.appearance
+          ? -1
+          : a.appearance < b.appearance
+            ? 1
+            : 0 
+    })
 
     return myPlayersRatings;
   }

@@ -6,6 +6,9 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import Typography from '@material-ui/core/Typography';
+
+import { Link } from 'gatsby'
+
 import { OUR_TEAM } from '../../utils/Constant';
 
 const styles = theme => ({
@@ -28,7 +31,8 @@ const styles = theme => ({
 });
 
 const GameCard = props => {
-  const { classes, opponent, image, date, homeOrAway } = props;
+  const { classes, opponent, image, date, homeOrAway, hasRated, id } = props;
+  console.log('this.props =>', props);
   return (
     <Paper className={classes.root}>
       <Grid container spacing={16}>
@@ -51,7 +55,17 @@ const GameCard = props => {
               <Typography component="h6" gutterBottom>{`When: ${date}`}</Typography>
             </Grid>
             <Grid item>
-              <Typography component="h6" style={{ cursor: 'pointer' }}>Rate</Typography>
+
+                <Link
+                  to={`/rating/${id}`}
+                  replace
+                >
+                  {
+                    hasRated
+                    ? <Typography component="h6" style={{ cursor: 'pointer' }}>Already rated, Check your rating</Typography>
+                    : <Typography component="h6" style={{ cursor: 'pointer' }}>Rate</Typography>
+                  }
+                </Link>
             </Grid>
           </Grid>
         </Grid>
@@ -61,7 +75,14 @@ const GameCard = props => {
 }
 
 GameCard.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  id: PropTypes.string.isRequired,
+  opponent: PropTypes.string.isRequired,
+  date: PropTypes.string.isRequired,
+  homeOrAway: PropTypes.string.isRequired,
+  image: PropTypes.string.isRequired,
+  isAuthed: PropTypes.bool.isRequired,
+  hasRated: PropTypes.bool
 }
 
 export default withStyles(styles)(GameCard);
