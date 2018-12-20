@@ -141,7 +141,6 @@ class HomeContainer extends Component {
             ? 1
             : 0 
     })
-
     return myPlayersRatings;
   }
 

@@ -61,9 +61,9 @@ class Home extends Component {
             playersRatings.map((player, key) => {
               return (
                 <ListItem key={key}>
-                  <Avatar className={classes.orangeAvatar}>{player.number}</Avatar>
+                  <Avatar className={classes.orangeAvatar}>{player.rating}</Avatar>
                   <ListItemText 
-                    primary={`${player.name} -- ${player.rating}`} 
+                    primary={`No.${player.number} - ${player.name} `} 
                     secondary={`Rated: ${player.appearance} times`} />
                 </ListItem>
               )
