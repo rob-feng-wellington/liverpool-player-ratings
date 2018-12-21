@@ -6,6 +6,7 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import GameCard from '../Home/GameCard';
 
 import RatingPlayerList from './playersList';
 import { groupByPosition } from '../../utils/utils';
@@ -35,7 +36,10 @@ class Rating extends Component {
   static propTypes = {
     classes: PropTypes.object,
     loading: PropTypes.bool,
-    title: PropTypes.string,
+    id: PropTypes.string,
+    opponent: PropTypes.string,
+    homeOrAway: PropTypes.string,
+    score: PropTypes.string,
     image: PropTypes.string,
     date: PropTypes.string,
     startingPlayers: PropTypes.array,
@@ -46,47 +50,43 @@ class Rating extends Component {
     onSubmit: PropTypes.func
   }
 
-  state = {
-    myRatings: {}
-  }
-
   getSubTitle = () => {
     const { date } = this.props;
     return `Played at ${date}`;
   }
 
   render() {
-    const { title, startingPlayers, subPlayers, image, classes, onRate, onSubmit, ratingsAverge } = this.props;
+    const { classes, isAuthed, id, opponent, date, score, homeOrAway, image, startingPlayers, subPlayers, onRate, onSubmit, ratingsAverge } = this.props;
     const startingGroupedPlayers = groupByPosition(startingPlayers);
     const subGroupedPlayers = groupByPosition(subPlayers);
 
     return (
-      <Paper className={classes.root}>
+      <div className={classes.root}>
         <Grid container spacing={32}>
-          <Grid item xs={12}>
-            <div className={classes.imageWrapper}>
-              <img alt={title} src={image} className={classes.image}/>
-            </div>
-            <div className={classes.titleWrapper}>
-              <Typography variant="h4" component="h4" gutterBottom>
-                {title}
-              </Typography>
-              <Typography variant="subtitle1" gutterBottom>
-                {this.getSubTitle()}
-              </Typography>
-            </div>
+          <Grid item xs={4}>
+            <GameCard 
+              id={id}
+              opponent={opponent}
+              date={date}
+              homeOrAway={homeOrAway}
+              image={image}
+              score={score}
+              isAuthed={isAuthed}
+            />
           </Grid>
-          <Grid item xs={12}>
-            <RatingPlayerList players={startingGroupedPlayers} ratingsAverge={ratingsAverge} onRate={onRate}/>
-          </Grid>
-          <Grid item xs={12}>
-            <RatingPlayerList players={subGroupedPlayers} ratingsAverge={ratingsAverge} onRate={onRate}/>
+          <Grid item xs={8}>
+            <Grid item xs={12}>
+              <RatingPlayerList players={startingGroupedPlayers} ratingsAverge={ratingsAverge} onRate={onRate}/>
+            </Grid>
+            <Grid item xs={12}>
+              <RatingPlayerList players={subGroupedPlayers} ratingsAverge={ratingsAverge} onRate={onRate}/>
+            </Grid>
+            <Button variant="outlined" color="primary" onClick={onSubmit}>
+              Submit Ratings
+            </Button>
           </Grid>
         </Grid>
-        <Button variant="outlined" color="primary" onClick={onSubmit}>
-          Submit Ratings
-        </Button>
-      </Paper>
+      </div>
     )
   }
 }

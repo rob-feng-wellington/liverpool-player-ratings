@@ -31,7 +31,7 @@ const styles = theme => ({
 });
 
 const GameCard = props => {
-  const { classes, opponent, image, date, homeOrAway, hasRated, id } = props;
+  const { classes, opponent, image, date, score, homeOrAway, hasRated, id } = props;
   console.log('this.props =>', props);
   return (
     <Paper className={classes.root}>
@@ -47,9 +47,9 @@ const GameCard = props => {
               <Typography component="h6" gutterBottom>
                 {
                   homeOrAway === 'home' ?
-                  `${OUR_TEAM} vs ${opponent}`
+                  `${OUR_TEAM} ${score} ${opponent}`
                   :
-                  `${opponent} vs ${OUR_TEAM}`
+                  `${opponent} ${score} ${OUR_TEAM}`
                 }
               </Typography>
               <Typography component="h6" gutterBottom>{`When: ${date}`}</Typography>
@@ -79,6 +79,7 @@ GameCard.propTypes = {
   id: PropTypes.string.isRequired,
   opponent: PropTypes.string.isRequired,
   date: PropTypes.string.isRequired,
+  score: PropTypes.string.isRequired,
   homeOrAway: PropTypes.string.isRequired,
   image: PropTypes.string.isRequired,
   isAuthed: PropTypes.bool.isRequired,
