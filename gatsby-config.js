@@ -39,8 +39,11 @@ module.exports = {
     {
       resolve: `@wapps/gatsby-plugin-material-ui`,
       options: {
-        pathToTheme: 'src/utils/theme', // Does not seem to work
-      },
+        palette: {
+          primary: '#ED2939',
+        },
+        productionPrefix: 'c',
+      }
     },
     {
       resolve: `gatsby-plugin-create-client-paths`,

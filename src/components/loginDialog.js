@@ -52,8 +52,12 @@ class LoginDialog extends Component{
                     text={'Sign in with Google'}
                   />
                 </ListItem>
-                <Divider />
-                <h6>Or Login with Email and Password</h6>
+              </List>
+            </div>
+            <Divider />
+            <div>
+              <List>
+                <DialogTitle>Or Login with Email and Password</DialogTitle>
                 <ListItem>
                   <form noValidate autoComplete="off">
                     <TextField
