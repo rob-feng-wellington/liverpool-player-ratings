@@ -15,7 +15,9 @@ class HomeContainer extends Component {
 
   state = {
     allGames: [],
-    myNumbers: []
+    myNumbers: [],
+    gameIsLoading: false,
+    statsIsLoading: false
   }
 
   componentDidMount() {
@@ -61,6 +63,10 @@ class HomeContainer extends Component {
   }
 
   getMyNumbers = (uid) => {
+    this.setState({
+      statsIsLoading: true,
+      gameIsLoading: true
+    })
     this.ratings
     .where('uid', '==', uid)
     .get()
@@ -82,15 +88,16 @@ class HomeContainer extends Component {
           const gameId = doc.data().gameId;
           return gameId;
         });
-        console.log('allGames =>', this.state.allGames);
+
         const updatedGames = this.state.allGames.map(game => {
           return { ...game, hasRated: gameRated.filter(gameId=> gameId === game.id).length > 0 }
         })
 
-        console.log('updatedGames =>', updatedGames);
         this.setState({
           myNumbers: FinalResults,
-          allGames: updatedGames
+          allGames: updatedGames,
+          statsIsLoading: false,
+          gameIsLoading: false
         })
       })
     })
@@ -162,6 +169,8 @@ class HomeContainer extends Component {
         uid={this.props.uid}
         ratingCounts={this.getMyRatingCounts()}
         playersRatings={this.getPlayersRatings()}
+        gameIsLoading={this.state.gameIsLoading}
+        statsIsLoading={this.state.statsIsLoading}
       />
     );
   }

@@ -12,7 +12,6 @@ const RatingPage = (props) => {
     <Layout>
       {
         auth => {
-          console.log('auth =>', auth);
           return (
             <Router>
               <Home path="/rating/" />
