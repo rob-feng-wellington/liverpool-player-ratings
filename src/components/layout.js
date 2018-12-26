@@ -7,6 +7,17 @@ import { rhythm } from '../utils/typography'
 import Header from './header'
 import Auth from '../containers/Auth'
 
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import purple from '@material-ui/core/colors/purple';
+import red from '@material-ui/core/colors/red';
+
+const theme = createMuiTheme({
+  palette: {
+    primary: { main: red[700] },
+    secondary: purple,
+  },
+  typography: { useNextVariants: true },
+});
 
 const Layout = ({ children, ...props }) => (
   <StaticQuery
@@ -20,6 +31,7 @@ const Layout = ({ children, ...props }) => (
       }
     `}
     render={data => (
+      <MuiThemeProvider theme={theme}>
       <Auth>
         {
           auth => {
@@ -54,6 +66,7 @@ const Layout = ({ children, ...props }) => (
           }
         }
       </Auth>
+      </MuiThemeProvider>
     )}
   />
 )

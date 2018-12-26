@@ -20,9 +20,11 @@ class RatingContainer extends Component {
   state = {
     loading: true,
     submitting: false,
-    title: '',
+    homeOrAway: 'home',
+    opponent: '',
     image: '',
     date: '',
+    score: '',
     startingPlayers: [],
     subPlayers: [],
     ratingCount: 0,
@@ -32,7 +34,7 @@ class RatingContainer extends Component {
   }
 
   componentDidMount() {
-    const { gameId, uid } = this.props;
+    const { gameId } = this.props;
     // id in firebase is 20 characters 
     if(gameId.length === 20) {
       this.setState({
@@ -122,7 +124,10 @@ class RatingContainer extends Component {
 
                 const initialState = {
                   loading: false,
-                  title: homeOrAway === 'home' ? `${OUR_TEAM} ${score} ${opponent}` : `${opponent} ${score} ${OUR_TEAM}`,
+                  id: gameId,
+                  opponent,
+                  homeOrAway,
+                  score,
                   image,
                   date,
                   myRating,
@@ -270,14 +275,18 @@ class RatingContainer extends Component {
   }
 
   render() {
-    const { loading, title, image, date, startingPlayers, subPlayers, ratingCount, ratingsAverge } = this.state;
+    const { loading, opponent, homeOrAway, score, image, date, startingPlayers, subPlayers, ratingCount, ratingsAverge } = this.state;
+    const { gameId } = this.props;
     return loading ?
       <div>loading...</div>
       :
       <>
         <Rating 
           loading={loading}
-          title={title}
+          id={gameId}
+          opponent={opponent}
+          homeOrAway={homeOrAway}
+          score={score}
           image={image}
           date={date}
           startingPlayers={startingPlayers}

@@ -105,6 +105,7 @@ class Home extends Component {
                   id={game.id}
                   opponent={game.opponent}
                   date={game.date}
+                  score={game.score}
                   homeOrAway={game.homeOrAway}
                   image={game.image}
                   isAuthed={isAuthed}
@@ -120,7 +121,8 @@ class Home extends Component {
 }
 
 Home.defaultProps = {
-  allGames: []
+  allGames: [],
+  playersRatings: []
 }
 
 export default withStyles(styles)(Home)
