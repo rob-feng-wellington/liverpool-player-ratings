@@ -111,7 +111,8 @@ class Home extends Component {
 }
 
 Home.defaultProps = {
-  allGames: []
+  allGames: [],
+  playersRatings: []
 }
 
 export default withStyles(styles)(Home)
