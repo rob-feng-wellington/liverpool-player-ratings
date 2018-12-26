@@ -14,8 +14,8 @@ const styles = theme => ({
   },
 
   title: {
-    paddingTop: 0,
-    paddingBottom: 0
+    paddingTop: '2px',
+    paddingBottom: '2px'
   },
 
   list: {
@@ -47,12 +47,20 @@ class LoginDialog extends Component{
     });
   }
   
-  handleEmailLogin = () => {
+  handleEmailLogin = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     this.props.onClose('email', this.state.email.value, this.state.password.value);
   }
 
   handleCreateUser = () => {
     this.props.onClose('signup', this.state.addEmail.value, this.state.addPassword.value);
+  }
+
+  onPasswordKeyPressed = (e) => {
+    if (event.keyCode === 13) {
+      this.handleEmailLogin();
+    }
   }
 
   render() {
@@ -63,8 +71,8 @@ class LoginDialog extends Component{
           showLogin ?
           <div className={classes.root}>
             <DialogTitle className={classes.title}>Please login</DialogTitle>
-            <List className={classes.list} disablePadding={true}>
-              <ListItem className={classes.list} disablePadding={true}>
+            <List className={classes.list}>
+              <ListItem className={classes.list} >
                 <SignIn
                   onClick={() => onClose('google')}
                   icon={<GoogleIcon />}
@@ -74,10 +82,10 @@ class LoginDialog extends Component{
             </List>
             <Divider />
             <div className={classes.root}>
-              <List className={classes.list} disablePadding={true}>
+              <List className={classes.list}>
                 <DialogTitle>Or Login with Email and Password</DialogTitle>
-                <ListItem className={classes.list} disablePadding={true}>
-                  <form noValidate autoComplete="off" onSubmit={this.handleEmailLogin} >
+                <ListItem className={classes.list} >
+                  <form noValidate autoComplete="off" onSubmit={(e) => this.handleEmailLogin(e)} >
                     <TextField
                       label="Email"
                       type="email"
