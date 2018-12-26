@@ -5,8 +5,28 @@ import { Dialog, DialogTitle, List, ListItem, TextField, Button, Divider } from 
 import SignIn from './SignIn';
 import GoogleIcon from './icons/Google';
 
+import { withStyles } from '@material-ui/core/styles';
+
+const styles = theme => ({
+  root: {
+    flexGrow: 1,
+    height: 'inherit',
+  },
+
+  title: {
+    paddingTop: 0,
+    paddingBottom: 0
+  },
+
+  list: {
+    paddingTop: 0,
+    paddingBottom: 0,
+  }
+})
+
 class LoginDialog extends Component{
   static propTypes = {
+    classes: PropTypes.object.isRequired,
     onClose: PropTypes.func.isRequired,
     showLogin: PropTypes.bool.isRequired,
     showSignUp: PropTypes.bool.isRequired
@@ -36,30 +56,28 @@ class LoginDialog extends Component{
   }
 
   render() {
-    const { onClose, showLogin, showSignUp, ...other } = this.props;
+    const { classes, onClose, showLogin, showSignUp, ...other } = this.props;
     return (
       <Dialog aria-labelledby="login-form" {...other}>
         {
           showLogin ?
-          <>
-            <DialogTitle>Please login</DialogTitle>
-            <div>
-              <List>
-                <ListItem>
-                  <SignIn
-                    onClick={() => onClose('google')}
-                    icon={<GoogleIcon />}
-                    text={'Sign in with Google'}
-                  />
-                </ListItem>
-              </List>
-            </div>
+          <div className={classes.root}>
+            <DialogTitle className={classes.title}>Please login</DialogTitle>
+            <List className={classes.list} disablePadding={true}>
+              <ListItem className={classes.list} disablePadding={true}>
+                <SignIn
+                  onClick={() => onClose('google')}
+                  icon={<GoogleIcon />}
+                  text={'Sign in with Google'}
+                />
+              </ListItem>
+            </List>
             <Divider />
-            <div>
-              <List>
+            <div className={classes.root}>
+              <List className={classes.list} disablePadding={true}>
                 <DialogTitle>Or Login with Email and Password</DialogTitle>
-                <ListItem>
-                  <form noValidate autoComplete="off">
+                <ListItem className={classes.list} disablePadding={true}>
+                  <form noValidate autoComplete="off" onSubmit={this.handleEmailLogin} >
                     <TextField
                       label="Email"
                       type="email"
@@ -73,17 +91,18 @@ class LoginDialog extends Component{
                       type="password"
                       value={this.state.password.value}
                       onChange={this.handleChange('password')}
+                      onKeyDown={this.onPasswordKeyPressed}
                       margin="normal"
                       fullWidth={true}
                     />
-                    <Button variant="contained" color="primary" onClick={this.handleEmailLogin}>
+                    <Button variant="contained" color="primary" type="submit">
                       Login
                     </Button>
                   </form>
                 </ListItem>
               </List>
             </div>
-          </>
+          </div>
           :
           null
         }
@@ -139,4 +158,4 @@ LoginDialog.defaultProps = {
   showSignUp: false
 }
 
-export default LoginDialog;
+export default withStyles(styles)(LoginDialog);
