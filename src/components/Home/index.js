@@ -10,6 +10,8 @@ import { Avatar } from '@material-ui/core';
 import deepOrange from '@material-ui/core/colors/deepOrange';
 import { List, ListItem, ListItemText } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
+import LinearProgress from '@material-ui/core/LinearProgress';
+
 
 import GameCard from './GameCard';
 
@@ -17,6 +19,11 @@ const styles = theme => ({
   root: {
     marginTop: '20px',
     flexGrow: 1,
+  },
+
+  statsListItem: {
+    paddingTop: '0',
+    paddingBottom: '0'
   },
 
   paper: {
@@ -37,12 +44,13 @@ class Home extends Component {
     classes: PropTypes.object.isRequired,
     allGames: PropTypes.array.isRequired,
     ratingCounts: PropTypes.number,
-    playersRatings: PropTypes.array
+    playersRatings: PropTypes.array,
+    gameIsLoading: PropTypes.bool,
+    statsIsLoading: PropTypes.bool
   }
 
   render() {
-    const { classes, allGames, isAuthed, ratingCounts, playersRatings } = this.props;
-
+    const { classes, allGames, isAuthed, ratingCounts, playersRatings, gameIsLoading, statsIsLoading } = this.props;
     const notAuthed = 
       <div>
         <Typography variant="h4" component="h4" >You will need to login to check your stats.</Typography>
@@ -60,10 +68,10 @@ class Home extends Component {
           {
             playersRatings.map((player, key) => {
               return (
-                <ListItem key={key}>
-                  <Avatar className={classes.orangeAvatar}>{player.number}</Avatar>
+                <ListItem key={key} className={classes.statsListItem}>
+                  <Avatar className={classes.orangeAvatar}>{player.rating}</Avatar>
                   <ListItemText 
-                    primary={`${player.name} -- ${player.rating}`} 
+                    primary={`No.${player.number} - ${player.name} `} 
                     secondary={`Rated: ${player.appearance} times`} />
                 </ListItem>
               )
@@ -77,20 +85,22 @@ class Home extends Component {
       <div className={classes.root}>
         <Grid container spacing={32}>
           <Grid item xs={5}>
-            <Paper className={classes.paper}>
+            <Paper className={classes.paper} >
               {
-                !isAuthed
-                ? notAuthed
-                : ratingCounts === 0 
-                  ? noRating
-                  : stats
+                statsIsLoading
+                ? <LinearProgress />
+                : !isAuthed
+                  ? notAuthed
+                  : ratingCounts === 0 
+                    ? noRating
+                    : stats
               }
             </Paper>
           </Grid>
           <Grid item xs={7}>
             {
               allGames.map(game => (
-                <GameCard 
+                <GameCard
                   key={game.id}
                   id={game.id}
                   opponent={game.opponent}

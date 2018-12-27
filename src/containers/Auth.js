@@ -95,7 +95,6 @@ class Auth extends React.Component {
 
   render() {
     const isAuthed = !!(this.state.uid && !this.state.isAnonymous);
-    console.log('isAuthed =>', isAuthed);
     return this.props.children({
       ...this.state,
       signIn: this.handleSignIn,

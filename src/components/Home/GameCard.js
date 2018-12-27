@@ -14,9 +14,8 @@ import { OUR_TEAM } from '../../utils/Constant';
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    maxWidth: 1200,
-    minWidth: 800,
     padding: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit * 4
   },
   image: {
     width: 320,
@@ -35,6 +34,9 @@ const GameCard = props => {
   console.log('this.props =>', props);
   return (
     <Paper className={classes.root}>
+    <Link
+      to={`/rating/${id}`}
+    >
       <Grid container spacing={16}>
         <Grid item>
           <ButtonBase className={classes.image}>
@@ -55,21 +57,16 @@ const GameCard = props => {
               <Typography component="h6" gutterBottom>{`When: ${date}`}</Typography>
             </Grid>
             <Grid item>
-
-                <Link
-                  to={`/rating/${id}`}
-                  replace
-                >
-                  {
-                    hasRated
-                    ? <Typography component="h6" style={{ cursor: 'pointer' }}>Already rated, Check your rating</Typography>
-                    : <Typography component="h6" style={{ cursor: 'pointer' }}>Rate</Typography>
-                  }
-                </Link>
+              {
+                hasRated
+                ? <Typography component="h6">Already rated, Check your rating</Typography>
+                : <Typography component="h6">Rate</Typography>
+              }
             </Grid>
           </Grid>
         </Grid>
       </Grid>
+      </Link>
     </Paper>
   )
 }
