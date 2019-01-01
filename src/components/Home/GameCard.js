@@ -6,6 +6,7 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button'
 
 import { Link } from 'gatsby'
 
@@ -30,8 +31,8 @@ const styles = theme => ({
 });
 
 const GameCard = props => {
-  const { classes, opponent, image, date, score, homeOrAway, hasRated, id } = props;
-  console.log('this.props =>', props);
+  const { classes, opponent, image, date, score, homeOrAway, hasRated, id, isAuthed } = props;
+
   return (
     <Paper className={classes.root}>
     <Link
@@ -46,7 +47,7 @@ const GameCard = props => {
         <Grid item xs={12} sm container>
           <Grid item xs container direction="column" spacing={16}>
             <Grid item xs>
-              <Typography component="h6" gutterBottom>
+              <Typography variant="h6" gutterBottom>
                 {
                   homeOrAway === 'home' ?
                   `${OUR_TEAM} ${score} ${opponent}`
@@ -54,13 +55,13 @@ const GameCard = props => {
                   `${opponent} ${score} ${OUR_TEAM}`
                 }
               </Typography>
-              <Typography component="h6" gutterBottom>{`When: ${date}`}</Typography>
+              <Typography variant="h6" gutterBottom>{`When: ${date}`}</Typography>
             </Grid>
             <Grid item>
               {
-                hasRated
-                ? <Typography component="h6">Already rated, Check your rating</Typography>
-                : <Typography component="h6">Rate</Typography>
+                isAuthed && hasRated
+                ? <Button variant="outlined" color="secondary">Click to review</Button>
+                : <Button variant="outlined" color="primary">Click to rate</Button>
               }
             </Grid>
           </Grid>

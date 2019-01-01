@@ -13,12 +13,15 @@ import './playersList.css';
 const styles = theme => ({
   root: {
     marginTop: '5px'
+  },
+  listItem: {
+    marginBottom: '10px'
   }
 })
 
 const RatingPlayerList = ({classes, players, onRate, ratingsAverge}) => {
   return(
-    <List className={`${classes.root} players-list-wrapper`} disablePadding={true}>
+    <List className={`${classes.root} players-list-wrapper`}>
       {
         POSITIONS_ORDER.map(position => {
           if (players[position]) {

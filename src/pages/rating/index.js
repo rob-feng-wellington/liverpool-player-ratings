@@ -15,7 +15,7 @@ const RatingPage = (props) => {
           return (
             <Router>
               <Home path="/rating/" />
-              <Rating path="rating/:gameId" uid={auth.uid} signIn={auth.signIn} />
+              <Rating path="rating/:gameId" uid={auth.uid} signIn={auth.signIn} isAuthed={auth.isAuthed} />
             </Router>
           )
         }

@@ -13,6 +13,7 @@ class RatingContainer extends Component {
 
   static propTypes = {
     uid: PropTypes.string,
+    isAuthed: PropTypes.bool,
     signIn: PropTypes.func,
     gameId: PropTypes.string
   }
@@ -30,7 +31,8 @@ class RatingContainer extends Component {
     ratingCount: 0,
     ratings: new Map,
     ratingsAverge: new Map,
-    signInDialogIsOpen: false
+    signInDialogIsOpen: false,
+    hasRated: false,
   }
 
   componentDidMount() {
@@ -175,9 +177,18 @@ class RatingContainer extends Component {
 
         this.setState({
           startingPlayers: updatedStartingPlayer,
-          subPlayers: updatedSubPlayer
+          subPlayers: updatedSubPlayer,
+          hasRated: true
+        })
+      } else {
+        this.setState({
+          hasRated: false
         })
       }
+    } else {
+      this.setState({
+        hasRated: false
+      })
     }
   }
 
@@ -275,8 +286,9 @@ class RatingContainer extends Component {
   }
 
   render() {
-    const { loading, opponent, homeOrAway, score, image, date, startingPlayers, subPlayers, ratingCount, ratingsAverge } = this.state;
-    const { gameId } = this.props;
+    const { loading, opponent, homeOrAway, score, image, date, startingPlayers, subPlayers, ratingCount, ratingsAverge, hasRated } = this.state;
+    const { gameId, isAuthed } = this.props;
+    console.log('isAuthed', isAuthed);
     return loading ?
       <div>loading...</div>
       :
@@ -295,6 +307,8 @@ class RatingContainer extends Component {
           ratingsAverge={ratingsAverge}
           onRate={this.handleRating}
           onSubmit={this.handleSubmit}
+          isAuthed={isAuthed}
+          hasRated={hasRated}
         />
         <LoginDialog
           open={this.state.signInDialogIsOpen}

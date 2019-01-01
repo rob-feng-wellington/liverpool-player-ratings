@@ -47,7 +47,9 @@ class Rating extends Component {
     ratingsCount: PropTypes.number,
     ratingsAverge: PropTypes.object,
     onRate: PropTypes.func,
-    onSubmit: PropTypes.func
+    onSubmit: PropTypes.func,
+    isAuthed: PropTypes.bool,
+    hasRated: PropTypes.bool,
   }
 
   getSubTitle = () => {
@@ -56,7 +58,7 @@ class Rating extends Component {
   }
 
   render() {
-    const { classes, isAuthed, id, opponent, date, score, homeOrAway, image, startingPlayers, subPlayers, onRate, onSubmit, ratingsAverge } = this.props;
+    const { classes, isAuthed, id, opponent, date, score, homeOrAway, image, startingPlayers, subPlayers, onRate, onSubmit, ratingsAverge, hasRated } = this.props;
     const startingGroupedPlayers = groupByPosition(startingPlayers);
     const subGroupedPlayers = groupByPosition(subPlayers);
 
@@ -72,13 +74,16 @@ class Rating extends Component {
               image={image}
               score={score}
               isAuthed={isAuthed}
+              hasRated={hasRated}
             />
           </Grid>
           <Grid item xs={8}>
             <Grid item xs={12}>
+              <Typography variant="h4" gutterBottom>Starting Line-up</Typography>
               <RatingPlayerList players={startingGroupedPlayers} ratingsAverge={ratingsAverge} onRate={onRate}/>
             </Grid>
             <Grid item xs={12}>
+              <Typography variant="h4" gutterBottom>Substitutes</Typography>
               <RatingPlayerList players={subGroupedPlayers} ratingsAverge={ratingsAverge} onRate={onRate}/>
             </Grid>
             <Button variant="outlined" color="primary" onClick={onSubmit}>

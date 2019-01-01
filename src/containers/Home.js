@@ -38,7 +38,8 @@ class HomeContainer extends Component {
     const { uid: nextUid } = nextProps;
     this.getAllGamesPromise.then(allGames => {
       if ((!uid && !nextUid) || (uid && !nextUid)) {
-        //this.signInAnonymously();
+        // user logged out
+        this.removeMyNumbers();
       } else {
         // a uid exists, check if the user has already voted
         this.getMyNumbers(nextUid, this.state.allGames);
@@ -62,6 +63,12 @@ class HomeContainer extends Component {
     })
   }
 
+  removeMyNumbers = () => {
+    this.setState({
+      
+    })
+  }
+
   getMyNumbers = (uid) => {
     this.setState({
       statsIsLoading: true,
@@ -72,7 +79,7 @@ class HomeContainer extends Component {
     .get()
     .then(querySnapshot => {
       Squad.getFullSquad().then(allPlayers => {
-        const FinalResults = querySnapshot.docs.map(doc => {
+        const finalResults = querySnapshot.docs.map(doc => {
           const ratings = doc.data().ratings;
 
           const fullRatingData = Object.keys(ratings).map(key => {
@@ -94,11 +101,14 @@ class HomeContainer extends Component {
         })
 
         this.setState({
-          myNumbers: FinalResults,
+          myNumbers: finalResults,
           allGames: updatedGames,
           statsIsLoading: false,
           gameIsLoading: false
         })
+
+        console.log('myNumbers', finalResults);
+        console.log('allGames', updatedGames);
       })
     })
 

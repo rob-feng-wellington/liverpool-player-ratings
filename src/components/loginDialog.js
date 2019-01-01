@@ -59,7 +59,7 @@ class LoginDialog extends Component{
 
   onPasswordKeyPressed = (e) => {
     if (event.keyCode === 13) {
-      this.handleEmailLogin();
+      this.handleEmailLogin(e);
     }
   }
 
