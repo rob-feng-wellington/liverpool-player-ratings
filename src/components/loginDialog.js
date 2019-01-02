@@ -14,8 +14,8 @@ const styles = theme => ({
   },
 
   title: {
-    paddingTop: '2px',
-    paddingBottom: '2px'
+    paddingTop: '0.5em',
+    paddingBottom: '0.5em'
   },
 
   list: {
@@ -55,6 +55,10 @@ class LoginDialog extends Component{
 
   handleCreateUser = () => {
     this.props.onClose('signup', this.state.addEmail.value, this.state.addPassword.value);
+  }
+
+  handleAnonymouseLogin = () => {
+    this.props.onClose('anonymous')
   }
 
   onPasswordKeyPressed = (e) => {
@@ -155,7 +159,7 @@ class LoginDialog extends Component{
           :
           null
         }
-        <Button variant="contained" color="primary">Not right now, take me back</Button>
+        <Button variant="outlined" color="primary" onClick={this.handleAnonymouseLogin}>Not right now, take me back</Button>
       </Dialog>
     )
   }

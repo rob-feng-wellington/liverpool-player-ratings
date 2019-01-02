@@ -45,6 +45,8 @@ class Header extends Component {
       this.props.signIn('email', email, password)
     } else if (signinOption === 'signup') {
       this.props.signIn('signup', email, password)
+    } else if (signinOption === 'anonymous') {
+      this.props.signIn('anonymous');
     }
     this.setState({
       signInDialogIsOpen: false
