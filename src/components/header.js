@@ -18,6 +18,8 @@ class Header extends Component {
 
   state = {
     signInDialogIsOpen: false,
+    signInFailed: false,
+    signInFailedReason: false,
     showLogin: false,
     showSignUp: false
   }
@@ -39,22 +41,29 @@ class Header extends Component {
   }
 
   handleLoginDialogClose = (signinOption, email, password) => {
-    if (signinOption === 'google') {
-      this.props.signIn('google')
-    } else if (signinOption === 'email') {
-      this.props.signIn('email', email, password)
-    } else if (signinOption === 'signup') {
-      this.props.signIn('signup', email, password)
-    } else if (signinOption === 'anonymous') {
-      this.props.signIn('anonymous');
+    let signinRequest;
+
+    if (signinOption === 'email' || signinOption === 'signup') {
+      signinRequest = this.props.signIn(signinOption, email, password)
+    } else {
+      signinRequest = this.props.signIn(signinOption);
     }
+
+    signinRequest.catch(error=> {
+      this.setState({
+        signInDialogIsOpen: true,
+        signInFailed: true,
+        signInFailedReason: signinOption === 'signup' ? "Signup failed, please try again" : "Login failed, please try again"
+      })
+    })
+    
     this.setState({
       signInDialogIsOpen: false
     })
   }
 
   render() {
-    const { signIn, signOut, siteTitle, isAuthed, email } = this.props;
+    const { siteTitle, isAuthed, email } = this.props;
 
     return (
       <div>

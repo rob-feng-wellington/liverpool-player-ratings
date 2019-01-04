@@ -43,28 +43,28 @@ class Auth extends React.Component {
           .signInWithPopup(new auth.GoogleAuthProvider())
           .catch(error => {
             console.error(error);
-            return error;
+            return Promise.reject(error);
           });
       case 'email':
         return auth()
           .signInWithEmailAndPassword(email, password)
           .catch(error => {
             console.error(error);
-            return error;
+            return Promise.reject(error);
           })
       case 'signup':
           return auth()
             .createUserWithEmailAndPassword(email, password)
             .catch(error => {
               console.log(error);
-              return error;
+              return Promise.reject(error);
             })
       case 'anonymous':
         return auth()
           .signInAnonymously()
           .catch(error => {
             console.error(error);
-            return error;
+            return Promise.reject(error);
           });
       default: 
         const reason = 'Invalid provider passed to signIn method';

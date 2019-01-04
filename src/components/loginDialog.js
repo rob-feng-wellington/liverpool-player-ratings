@@ -74,7 +74,7 @@ class LoginDialog extends Component{
         {
           showLogin ?
           <div className={classes.root}>
-            <DialogTitle className={classes.title}>Please login</DialogTitle>
+            <DialogTitle className={classes.title}>Login with Gooogle account</DialogTitle>
             <List className={classes.list}>
               <ListItem className={classes.list} >
                 <SignIn
@@ -84,10 +84,10 @@ class LoginDialog extends Component{
                 />
               </ListItem>
             </List>
-            <Divider />
+            <Divider variant="middle"/>
             <div className={classes.root}>
               <List className={classes.list}>
-                <DialogTitle>Or Login with Email and Password</DialogTitle>
+                <DialogTitle className={classes.title}>Login with Username and Password</DialogTitle>
                 <ListItem className={classes.list} >
                   <form noValidate autoComplete="off" onSubmit={(e) => this.handleEmailLogin(e)} >
                     <TextField
@@ -121,8 +121,9 @@ class LoginDialog extends Component{
         {
           showSignUp ?
           <>
-          <DialogTitle>Please create an account</DialogTitle>
+          <Divider variant="middle"/>
           <List>
+            <DialogTitle className={classes.title}>Please create an account</DialogTitle>
             <ListItem>
               <form autoComplete="off">
                 <TextField

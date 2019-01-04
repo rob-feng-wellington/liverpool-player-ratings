@@ -21,23 +21,27 @@ class HomeContainer extends Component {
   }
 
   componentDidMount() {
+    this.setState({
+      gameIsLoading: true,
+    })
     this.getAllGamesPromise = this.getAllGames()
       .then(response => {
         this.setState({
-          allGames: response
+          allGames: response,
+          gameIsLoading: false
         })
-        const { uid } = this.props;
-        if( uid ) {
+        const { isAuthed, uid } = this.props;
+        if( isAuthed ) {
           this.getMyNumbers(uid, response);
         }
     })
   }
 
   componentWillReceiveProps(nextProps) {
-    const { uid } = this.props;
-    const { uid: nextUid } = nextProps;
+    const { isAuthed } = this.props;
+    const { isAuthed: nextIsAuthed, uid: nextUid } = nextProps;
     this.getAllGamesPromise.then(allGames => {
-      if ((!uid && !nextUid) || (uid && !nextUid)) {
+      if ((!isAuthed && !nextIsAuthed) || (isAuthed && !nextIsAuthed)) {
         // user logged out
         this.removeMyNumbers();
       } else {

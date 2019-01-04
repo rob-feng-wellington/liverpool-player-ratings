@@ -59,11 +59,16 @@ class Home extends Component {
         </Button>
       </div>
 
-    const noRating = <Typography component="h4" >Kick off your rating by click one of the games on the right</Typography>;
+    const noRating = (
+      <>
+        <Typography variant="h4">My Stats</Typography>
+        <Typography variant="h6">Kick off your rating by choosing one of the games on the right</Typography>
+      </>
+    );
 
     const stats = (
       <>
-        <Typography component="h4" >My States</Typography>
+        <Typography variant="h4" >My Stats</Typography>
         <List>
           {
             playersRatings.map((player, key) => {
@@ -99,7 +104,9 @@ class Home extends Component {
           </Grid>
           <Grid item xs={7}>
             {
-              allGames.map(game => (
+              gameIsLoading
+              ? <LinearProgress />
+              : allGames.map(game => (
                 <GameCard
                   key={game.id}
                   id={game.id}

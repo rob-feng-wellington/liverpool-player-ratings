@@ -139,7 +139,7 @@ class RatingContainer extends Component {
                   ratingsAverge,
                   ratings
                 }
-
+                console.log('startingPlayers =>', startingPlayers);
                 resolve(initialState);
               })
             })
@@ -166,7 +166,10 @@ class RatingContainer extends Component {
       }).reduce((r, o) => {
         return o;
       },{});
-      if(myRating) {
+
+      console.log('myRating => ', myRating);
+      if(myRating && Object.keys(myRating).length > 0) {
+        console.log('myRating 2 => ', myRating);
         const updatedStartingPlayer = this.state.startingPlayers.map(player => {
           return { ...player, rating: myRating[player.id]}
         })
