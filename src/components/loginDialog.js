@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Dialog, DialogTitle, List, ListItem, TextField, Button, Divider } from '@material-ui/core';
+import { Dialog, DialogTitle, List, ListItem, TextField, Button, Divider, FormControl, FormHelperText, Input, InputLabel } from '@material-ui/core';
 import SignIn from './SignIn';
 import GoogleIcon from './icons/Google';
 
@@ -21,6 +21,10 @@ const styles = theme => ({
   list: {
     paddingTop: 0,
     paddingBottom: 0,
+  },
+
+  margin: {
+    margin: theme.spacing.unit,
   }
 })
 
@@ -29,32 +33,36 @@ class LoginDialog extends Component{
     classes: PropTypes.object.isRequired,
     onClose: PropTypes.func.isRequired,
     showLogin: PropTypes.bool.isRequired,
-    showSignUp: PropTypes.bool.isRequired
+    showSignUp: PropTypes.bool.isRequired,
+    emailErrorMessage: PropTypes.string,
+    passwordErrorMessage: PropTypes.string,
+    addEmailErrorMessage: PropTypes.string,
+    addPasswordErrorMessage: PropTypes.string,
+    addPasswordConfirmErrorMessage: PropTypes.string
   }
 
   state = {
-    email: {value: '', error: ''},
-    password: {value: '', error: ''},
-    addEmail: {value: '', error: ''},
-    addPassword: {value: '', error: ''},
-    confirmPassword: {value: '', error: ''}
+    email: '',
+    password: '',
+    addEmail: '',
+    addPassword: '',
+    confirmPassword: ''
   }
 
   handleChange = (attr) => event => {
-    const newState = { ...this.state[attr], value: event.target.value};
     this.setState({
-      [attr]: newState,
+      [attr]:  event.target.value,
     });
   }
   
   handleEmailLogin = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    this.props.onClose('email', this.state.email.value, this.state.password.value);
+    this.props.onClose('email', this.state.email, this.state.password);
   }
 
   handleCreateUser = () => {
-    this.props.onClose('signup', this.state.addEmail.value, this.state.addPassword.value);
+    this.props.onClose('signup', this.state.addEmail, this.state.addPassword);
   }
 
   handleAnonymouseLogin = () => {
@@ -64,6 +72,12 @@ class LoginDialog extends Component{
   onPasswordKeyPressed = (e) => {
     if (event.keyCode === 13) {
       this.handleEmailLogin(e);
+    }
+  }
+
+  onPasswordConfirmKeyPressed = () => {
+    if (event.keyCode === 13) {
+      this.handleCreateUser();
     }
   }
 
@@ -90,23 +104,39 @@ class LoginDialog extends Component{
                 <DialogTitle className={classes.title}>Login with Username and Password</DialogTitle>
                 <ListItem className={classes.list} >
                   <form noValidate autoComplete="off" onSubmit={(e) => this.handleEmailLogin(e)} >
-                    <TextField
-                      label="Email"
-                      type="email"
-                      value={this.state.email.value}
-                      onChange={this.handleChange('email')}
-                      margin="normal"
-                      fullWidth={true}
-                    />
-                    <TextField
-                      label="Password"
-                      type="password"
-                      value={this.state.password.value}
-                      onChange={this.handleChange('password')}
-                      onKeyDown={this.onPasswordKeyPressed}
-                      margin="normal"
-                      fullWidth={true}
-                    />
+                    <FormControl className={classes.margin} error={this.props.emailErrorMessage === '' ? false : true}>
+                      <InputLabel htmlFor="signinEmail">Email</InputLabel>
+                      <Input
+                        name="signinEmail"
+                        type="email"
+                        value={this.state.email}  
+                        onChange={this.handleChange('email')}
+                        fullWidth={true}
+                      />
+                      {
+                        this.props.emailErrorMessage === ''
+                        ? null
+                        : <FormHelperText name="signin-email-error-text">{this.props.emailErrorMessage}</FormHelperText>
+                      }
+
+                    </FormControl>
+                    <FormControl className={classes.margin} error={this.props.passwordErrorMessage === '' ? false : true}>
+                      <InputLabel htmlFor="signinPassword">Password</InputLabel>
+                      <Input
+                        name="signinPassword"
+                        type="password"
+                        value={this.state.password}  
+                        onChange={this.handleChange('password')}
+                        onKeyDown={this.onPasswordKeyPressed}
+                        fullWidth={true}
+                      />
+                      {
+                        this.props.passwordErrorMessage === ''
+                        ? null
+                        : <FormHelperText name="signin-password-error-text">{this.props.passwordErrorMessage}</FormHelperText>
+                      }
+                    </FormControl>
+
                     <Button variant="contained" color="primary" type="submit">
                       Login
                     </Button>
@@ -129,7 +159,7 @@ class LoginDialog extends Component{
                 <TextField
                   label="Email"
                   type="email"
-                  value={this.state.addEmail.value}
+                  value={this.state.addEmail}
                   onChange={this.handleChange('addEmail')}
                   margin="normal"
                   fullWidth={true}
@@ -137,7 +167,7 @@ class LoginDialog extends Component{
                 <TextField
                   label="Password"
                   type="password"
-                  value={this.state.addPassword.value}
+                  value={this.state.addPassword}
                   onChange={this.handleChange('addPassword')}
                   margin="normal"
                   fullWidth={true}
@@ -145,8 +175,9 @@ class LoginDialog extends Component{
                 <TextField
                   label="Confirm Password"
                   type="password"
-                  value={this.state.confirmPassword.value}
+                  value={this.state.confirmPassword}
                   onChange={this.handleChange('confirmPassword')}
+                  onKeyDown={this.onPasswordConfirmKeyPressed}
                   margin="normal"
                   fullWidth={true}
                 />
@@ -168,7 +199,12 @@ class LoginDialog extends Component{
 
 LoginDialog.defaultProps = {
   showLogin: true,
-  showSignUp: false
+  showSignUp: false,
+  emailErrorMessage: '',
+  passwordErrorMessage: '',
+  addEmailErrorMessage: '',
+  addPasswordErrorMessage: '',
+  addPasswordConfirmErrorMessage: ''
 }
 
 export default withStyles(styles)(LoginDialog);
