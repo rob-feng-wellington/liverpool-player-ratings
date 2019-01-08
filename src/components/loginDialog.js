@@ -40,13 +40,32 @@ class LoginDialog extends Component{
     addPasswordErrorMessage: PropTypes.string,
     addPasswordConfirmErrorMessage: PropTypes.string
   }
-
   state = {
     email: '',
     password: '',
     addEmail: '',
     addPassword: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    showLogin: this.props.showLogin,
+    showSignUp: this.props.showSignUp
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const {showLogin} = this.props;
+    const {showLogin: nextShowLogin} = nextProps;
+    if( showLogin !== nextShowLogin ) {
+      this.setState({
+        showLogin: nextShowLogin
+      })
+    }
+
+    const {showSignUp} = this.props;
+    const {showSignUp: nextShowSignUp} = nextProps;
+    if( showSignUp !== nextShowSignUp ) {
+      this.setState({
+        showSignUp: nextShowSignUp
+      })
+    }
   }
 
   handleChange = (attr) => event => {
@@ -69,6 +88,13 @@ class LoginDialog extends Component{
     this.props.onClose('anonymous')
   }
 
+  handleSwitchMode = (mode) => {
+    this.setState({
+      ...{showLogin: false, showSignUp: false},
+      [mode]: true
+    })
+  }
+
   onPasswordKeyPressed = (e) => {
     if (event.keyCode === 13) {
       this.handleEmailLogin(e);
@@ -82,11 +108,32 @@ class LoginDialog extends Component{
   }
 
   render() {
-    const { classes, onClose, showLogin, showSignUp, ...other } = this.props;
+    const { 
+      classes, 
+      onClose, 
+      showLogin,
+      showSignUp,
+      emailErrorMessage, 
+      passwordErrorMessage, 
+      addEmailErrorMessage, 
+      addPasswordErrorMessage, 
+      addPasswordConfirmErrorMessage, 
+      ...other } = this.props;
+
+    const {
+      showLogin: stateShowLogin, 
+      showSignUp: stateShowSignup, 
+    } = this.state;
+
+    console.log('show login => ', stateShowLogin);
+    console.log('show signup => ', stateShowSignup);
     return (
-      <Dialog aria-labelledby="login-form" {...other}>
+      <Dialog 
+        aria-labelledby="login-form" 
+        {...other}
+        >
         {
-          showLogin ?
+          stateShowLogin ?
           <div className={classes.root}>
             <DialogTitle className={classes.title}>Login with Gooogle account</DialogTitle>
             <List className={classes.list}>
@@ -104,7 +151,7 @@ class LoginDialog extends Component{
                 <DialogTitle className={classes.title}>Login with Username and Password</DialogTitle>
                 <ListItem className={classes.list} >
                   <form noValidate autoComplete="off" onSubmit={(e) => this.handleEmailLogin(e)} >
-                    <FormControl className={classes.margin} error={this.props.emailErrorMessage === '' ? false : true}>
+                    <FormControl className={classes.margin} error={emailErrorMessage === '' ? false : true}>
                       <InputLabel htmlFor="signinEmail">Email</InputLabel>
                       <Input
                         name="signinEmail"
@@ -114,13 +161,13 @@ class LoginDialog extends Component{
                         fullWidth={true}
                       />
                       {
-                        this.props.emailErrorMessage === ''
+                        emailErrorMessage === ''
                         ? null
-                        : <FormHelperText name="signin-email-error-text">{this.props.emailErrorMessage}</FormHelperText>
+                        : <FormHelperText name="signin-email-error-text">{emailErrorMessage}</FormHelperText>
                       }
 
                     </FormControl>
-                    <FormControl className={classes.margin} error={this.props.passwordErrorMessage === '' ? false : true}>
+                    <FormControl className={classes.margin} error={passwordErrorMessage === '' ? false : true}>
                       <InputLabel htmlFor="signinPassword">Password</InputLabel>
                       <Input
                         name="signinPassword"
@@ -131,14 +178,18 @@ class LoginDialog extends Component{
                         fullWidth={true}
                       />
                       {
-                        this.props.passwordErrorMessage === ''
+                        passwordErrorMessage === ''
                         ? null
-                        : <FormHelperText name="signin-password-error-text">{this.props.passwordErrorMessage}</FormHelperText>
+                        : <FormHelperText name="signin-password-error-text">{passwordErrorMessage}</FormHelperText>
                       }
                     </FormControl>
 
                     <Button variant="contained" color="primary" type="submit">
                       Login
+                    </Button>
+                    <span> | </span>
+                    <Button variant="outlined" color="secondary" onClick={()=>this.handleSwitchMode('showSignUp')}>
+                      Sign up
                     </Button>
                   </form>
                 </ListItem>
@@ -149,7 +200,7 @@ class LoginDialog extends Component{
           null
         }
         {
-          showSignUp ?
+          stateShowSignup ?
           <>
           <Divider variant="middle"/>
           <List>
@@ -183,6 +234,9 @@ class LoginDialog extends Component{
                 />
                 <Button variant="contained" color="primary" onClick={this.handleCreateUser}>
                   Sign Up
+                </Button>
+                <Button variant="outlined" color="secondary" onClick={() => this.handleSwitchMode('showLogin')}>
+                  Login
                 </Button>
               </form>
             </ListItem>

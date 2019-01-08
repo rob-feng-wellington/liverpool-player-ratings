@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import Rating from '../components/Rating';
 import { navigate } from "@reach/router";
 import LoginDialog from '../components/loginDialog';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
-import { OUR_TEAM, DEFAULT_RATING } from '../utils/Constant';
+import { DEFAULT_RATING } from '../utils/Constant';
 
 class RatingContainer extends Component {
   static contextTypes = {
@@ -216,19 +217,18 @@ class RatingContainer extends Component {
   }
 
   handleSubmit = () => {
-    const { gameId, uid } = this.props;
+    const { gameId, uid, isAuthed } = this.props;
     this.setState({
       submitting: true
     })
-    if (!uid) {
+    if (!isAuthed) {
       //if no user id at this point, need to sign in as anonymouse
       this.setState({
         signInDialogIsOpen: true
       })
     } else {
       // already login. Kick off submit process
-      this.doSubmit(gameId, uid);
-
+      this.doSubmit(gameId, uid)
     }
   }
 
@@ -293,7 +293,10 @@ class RatingContainer extends Component {
     const { gameId, isAuthed } = this.props;
     console.log('isAuthed', isAuthed);
     return loading ?
-      <div>loading...</div>
+      <>
+      <br />
+      <LinearProgress />
+      </>
       :
       <>
         <Rating 
