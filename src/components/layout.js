@@ -40,8 +40,8 @@ const Layout = ({ children, ...props }) => (
                 <Helmet
                   title={data.site.siteMetadata.title}
                   meta={[
-                    { name: 'description', content: 'Sample' },
-                    { name: 'keywords', content: 'sample, something' },
+                    { name: 'description', content: 'Liverpool players ratings' },
+                    { name: 'keywords', content: 'liverpool, players, ratings' },
                   ]}>
                   <html lang="en" />
                 </Helmet>

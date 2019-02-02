@@ -222,7 +222,7 @@ class RatingContainer extends Component {
       submitting: true
     })
     if (!isAuthed) {
-      //if no user id at this point, need to sign in as anonymouse
+      //if no user id at this point, need to Sign in as anonymouse
       this.setState({
         signInDialogIsOpen: true
       })

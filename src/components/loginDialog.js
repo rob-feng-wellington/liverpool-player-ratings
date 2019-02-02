@@ -11,6 +11,8 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
     height: 'inherit',
+    width: '60vw',
+    maxWidth: '800px'
   },
 
   title: {
@@ -129,13 +131,14 @@ class LoginDialog extends Component{
     console.log('show signup => ', stateShowSignup);
     return (
       <Dialog 
-        aria-labelledby="login-form" 
+        aria-labelledby="login-form"
+        maxWidth={false}
         {...other}
         >
         {
           stateShowLogin ?
           <div className={classes.root}>
-            <DialogTitle className={classes.title}>Login with Gooogle account</DialogTitle>
+            <DialogTitle className={classes.title}>Sign in with Google account</DialogTitle>
             <List className={classes.list}>
               <ListItem className={classes.list} >
                 <SignIn
@@ -148,7 +151,7 @@ class LoginDialog extends Component{
             <Divider variant="middle"/>
             <div className={classes.root}>
               <List className={classes.list}>
-                <DialogTitle className={classes.title}>Login with Username and Password</DialogTitle>
+                <DialogTitle className={classes.title}>Sign in with Username and Password</DialogTitle>
                 <ListItem className={classes.list} >
                   <form noValidate autoComplete="off" onSubmit={(e) => this.handleEmailLogin(e)} >
                     <FormControl className={classes.margin} error={emailErrorMessage === '' ? false : true}>
@@ -185,9 +188,9 @@ class LoginDialog extends Component{
                     </FormControl>
 
                     <Button variant="contained" color="primary" type="submit">
-                      Login
+                      Sign In
                     </Button>
-                    <span> | </span>
+                    <span>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;</span>
                     <Button variant="outlined" color="secondary" onClick={()=>this.handleSwitchMode('showSignUp')}>
                       Sign up
                     </Button>
@@ -201,47 +204,48 @@ class LoginDialog extends Component{
         }
         {
           stateShowSignup ?
-          <>
-          <Divider variant="middle"/>
-          <List>
+          <div className={classes.root}>
+            <Divider variant="middle"/>
+            <List>
             <DialogTitle className={classes.title}>Please create an account</DialogTitle>
-            <ListItem>
-              <form autoComplete="off">
-                <TextField
-                  label="Email"
-                  type="email"
-                  value={this.state.addEmail}
-                  onChange={this.handleChange('addEmail')}
-                  margin="normal"
-                  fullWidth={true}
-                />
-                <TextField
-                  label="Password"
-                  type="password"
-                  value={this.state.addPassword}
-                  onChange={this.handleChange('addPassword')}
-                  margin="normal"
-                  fullWidth={true}
-                />
-                <TextField
-                  label="Confirm Password"
-                  type="password"
-                  value={this.state.confirmPassword}
-                  onChange={this.handleChange('confirmPassword')}
-                  onKeyDown={this.onPasswordConfirmKeyPressed}
-                  margin="normal"
-                  fullWidth={true}
-                />
-                <Button variant="contained" color="primary" onClick={this.handleCreateUser}>
-                  Sign Up
-                </Button>
-                <Button variant="outlined" color="secondary" onClick={() => this.handleSwitchMode('showLogin')}>
-                  Login
-                </Button>
-              </form>
-            </ListItem>
-          </List>
-          </>
+              <ListItem>
+                <form autoComplete="off">
+                  <TextField
+                    label="Email"
+                    type="email"
+                    value={this.state.addEmail}
+                    onChange={this.handleChange('addEmail')}
+                    margin="normal"
+                    fullWidth={true}
+                  />
+                  <TextField
+                    label="Password"
+                    type="password"
+                    value={this.state.addPassword}
+                    onChange={this.handleChange('addPassword')}
+                    margin="normal"
+                    fullWidth={true}
+                  />
+                  <TextField
+                    label="Confirm Password"
+                    type="password"
+                    value={this.state.confirmPassword}
+                    onChange={this.handleChange('confirmPassword')}
+                    onKeyDown={this.onPasswordConfirmKeyPressed}
+                    margin="normal"
+                    fullWidth={true}
+                  />
+                  <Button variant="contained" color="primary" onClick={this.handleCreateUser}>
+                    Sign Up
+                  </Button>
+                  <span>  |  </span>
+                  <Button variant="outlined" color="secondary" onClick={() => this.handleSwitchMode('showLogin')}>
+                    Sign In
+                  </Button>
+                </form>
+              </ListItem>
+            </List>
+          </div>
           :
           null
         }

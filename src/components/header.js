@@ -7,9 +7,21 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 
 import LoginDialog from './loginDialog';
+import { Link } from 'gatsby';
+
+import { withStyles } from '@material-ui/core/styles';
+
+const styles = theme => ({
+  title: {
+    color: 'white',
+    textDecoration: 'none'
+
+  }
+})
 
 class Header extends Component {
   static propTypes = {
+    classes: PropTypes.object.isRequired,
     signIn: PropTypes.func.isRequired,
     signOut: PropTypes.func.isRequired,
     siteTitle: PropTypes.string,
@@ -53,7 +65,7 @@ class Header extends Component {
       this.setState({
         signInDialogIsOpen: true,
         signInFailed: true,
-        signInFailedReason: signinOption === 'signup' ? "Signup failed, please try again" : "Login failed, please try again"
+        signInFailedReason: signinOption === 'signup' ? "Signup failed, please try again" : "Sign in failed, please try again"
       })
     })
     
@@ -63,16 +75,18 @@ class Header extends Component {
   }
 
   render() {
-    const { siteTitle, isAuthed, email } = this.props;
+    const { classes, siteTitle, isAuthed, email } = this.props;
 
     return (
       <div>
         <AppBar position="static">
           <Toolbar>
-            <Typography component="h6" color="inherit" style={{
+            <Typography variant="h5" color="inherit" style={{
               flexGrow: 1,
             }}>
-              {siteTitle}
+              <Link to={`/`} className={classes.title}>
+                {siteTitle.toUpperCase()}
+              </Link>
             </Typography>
             {
               isAuthed ?
@@ -88,7 +102,7 @@ class Header extends Component {
                   color="inherit"
                   onClick={this.handleClickOpenLogin}
                 >
-                  Login
+                  Sign In
                 </Button>
                 <Button
                   color="inherit"
@@ -111,4 +125,4 @@ class Header extends Component {
   }
 }
 
-export default Header
+export default withStyles(styles)(Header)

@@ -1,8 +1,8 @@
 {
-  "name": "gatsby-starter-default",
-  "description": "Gatsby default starter",
+  "name": "liverpool-players-rating",
+  "description": "Liverpool Players Rating powered by Gatsby",
   "version": "1.0.0",
-  "author": "Kyle Mathews <mathews.kyle@gmail.com>",
+  "author": "Rob Feng <robfeng1978@gmail.com>",
   "dependencies": {
     "@material-ui/core": "^3.5.1",
     "@material-ui/icons": "^3.0.1",
@@ -35,6 +35,8 @@
     "typography-theme-wordpress-2016": "^0.15.10"
   },
   "keywords": [
+    "liverpool",
+    "rating",
     "gatsby"
   ],
   "license": "MIT",
