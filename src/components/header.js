@@ -30,10 +30,13 @@ class Header extends Component {
 
   state = {
     signInDialogIsOpen: false,
-    signInFailed: false,
-    signInFailedReason: false,
     showLogin: false,
-    showSignUp: false
+    showSignUp: false,
+    emailErrorMessage: '',
+    passwordErrorMessage: '',
+    addEmailErrorMessage: '',
+    addPasswordErrorMessage: '',
+    addPasswordConfirmErrorMessage: ''
   }
 
   handleClickOpenLogin = () => {
@@ -52,6 +55,31 @@ class Header extends Component {
     })
   }
 
+  handleFailedMessages = (error) => {
+    let errorMessage = {
+      signInDialogIsOpen: true,
+      emailErrorMessage: '',
+      passwordErrorMessage: '',
+      addEmailErrorMessage: '',
+      addPasswordErrorMessage: '',
+      addPasswordConfirmErrorMessage: ''
+    }
+
+    switch(error.code) {
+      case 'auth/invalid-email':
+      case 'auth/user-not-found':
+        errorMessage = {...errorMessage, emailErrorMessage: error.message}
+        break;
+      case 'auth/wrong-password':
+        errorMessage = {...errorMessage, passwordErrorMessage: error.message}
+        break;
+      default:
+        errorMessage =  {...errorMessage, emailErrorMessage: 'unknown error, please try again'}
+    }
+    console.log('errorMessage =>', errorMessage);
+    this.setState(errorMessage);
+  }
+
   handleLoginDialogClose = (signinOption, email, password) => {
     let signinRequest;
 
@@ -62,11 +90,7 @@ class Header extends Component {
     }
 
     signinRequest.catch(error=> {
-      this.setState({
-        signInDialogIsOpen: true,
-        signInFailed: true,
-        signInFailedReason: signinOption === 'signup' ? "Signup failed, please try again" : "Sign in failed, please try again"
-      })
+      this.handleFailedMessages(error);
     })
     
     this.setState({
@@ -115,6 +139,11 @@ class Header extends Component {
                   onClose={this.handleLoginDialogClose}
                   showLogin={this.state.showLogin}
                   showSignUp={this.state.showSignUp}
+                  emailErrorMessage= {this.state.emailErrorMessage}
+                  passwordErrorMessage= {this.state.passwordErrorMessage}
+                  addEmailErrorMessage= {this.state.addEmailErrorMessage}
+                  addPasswordErrorMessage= {this.state.addPasswordErrorMessage}
+                  addPasswordConfirmErrorMessage= {this.state.addPasswordConfirmErrorMessage}
                 />
               </div>
             }

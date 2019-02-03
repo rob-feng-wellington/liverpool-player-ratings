@@ -152,14 +152,13 @@ class LoginDialog extends Component{
                 <DialogTitle className={classes.title}>Sign in with Username and Password</DialogTitle>
                 <ListItem className={classes.list} >
                   <form noValidate autoComplete="off" onSubmit={(e) => this.handleEmailLogin(e)} >
-                    <FormControl className={classes.margin} error={emailErrorMessage === '' ? false : true}>
+                    <FormControl fullWidth={true} className={classes.margin} error={emailErrorMessage === '' ? false : true}>
                       <InputLabel htmlFor="signinEmail">Email</InputLabel>
                       <Input
                         name="signinEmail"
                         type="email"
                         value={this.state.email}  
                         onChange={this.handleChange('email')}
-                        fullWidth={true}
                       />
                       {
                         emailErrorMessage === ''
@@ -168,7 +167,7 @@ class LoginDialog extends Component{
                       }
 
                     </FormControl>
-                    <FormControl className={classes.margin} error={passwordErrorMessage === '' ? false : true}>
+                    <FormControl fullWidth={true} className={classes.margin} error={passwordErrorMessage === '' ? false : true}>
                       <InputLabel htmlFor="signinPassword">Password</InputLabel>
                       <Input
                         name="signinPassword"
@@ -176,7 +175,6 @@ class LoginDialog extends Component{
                         value={this.state.password}  
                         onChange={this.handleChange('password')}
                         onKeyDown={this.onPasswordKeyPressed}
-                        fullWidth={true}
                       />
                       {
                         passwordErrorMessage === ''
