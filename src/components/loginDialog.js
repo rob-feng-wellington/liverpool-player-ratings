@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Dialog, DialogTitle, List, ListItem, TextField, Button, Divider, FormControl, FormHelperText, Input, InputLabel } from '@material-ui/core';
+import { Dialog, DialogTitle, DialogActions, List, ListItem, TextField, Button, Divider, FormControl, FormHelperText, Input, InputLabel } from '@material-ui/core';
 import SignIn from './SignIn';
 import GoogleIcon from './icons/Google';
 
@@ -127,8 +127,6 @@ class LoginDialog extends Component{
       showSignUp: stateShowSignup, 
     } = this.state;
 
-    console.log('show login => ', stateShowLogin);
-    console.log('show signup => ', stateShowSignup);
     return (
       <Dialog 
         aria-labelledby="login-form"
@@ -190,10 +188,6 @@ class LoginDialog extends Component{
                     <Button variant="contained" color="primary" type="submit">
                       Sign In
                     </Button>
-                    <span>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                    <Button variant="outlined" color="secondary" onClick={()=>this.handleSwitchMode('showSignUp')}>
-                      Sign up
-                    </Button>
                   </form>
                 </ListItem>
               </List>
@@ -206,9 +200,9 @@ class LoginDialog extends Component{
           stateShowSignup ?
           <div className={classes.root}>
             <Divider variant="middle"/>
-            <List>
+            <List className={classes.list}>
             <DialogTitle className={classes.title}>Please create an account</DialogTitle>
-              <ListItem>
+              <ListItem className={classes.list}>
                 <form autoComplete="off">
                   <TextField
                     label="Email"
@@ -238,10 +232,6 @@ class LoginDialog extends Component{
                   <Button variant="contained" color="primary" onClick={this.handleCreateUser}>
                     Sign Up
                   </Button>
-                  <span>  |  </span>
-                  <Button variant="outlined" color="secondary" onClick={() => this.handleSwitchMode('showLogin')}>
-                    Sign In
-                  </Button>
                 </form>
               </ListItem>
             </List>
@@ -249,7 +239,14 @@ class LoginDialog extends Component{
           :
           null
         }
-        <Button variant="outlined" color="primary" onClick={this.handleAnonymouseLogin}>Not right now, take me back</Button>
+        <DialogActions>
+          <Button onClick={() => {stateShowSignup ? this.handleSwitchMode('showLogin') : this.handleSwitchMode('showSignUp')} } color="secondary">
+            { stateShowSignup ? 'Switch to Sign in' : 'Switch to Sign up' }
+          </Button>
+          <Button onClick={this.handleAnonymouseLogin} color="secondary">
+            Close
+          </Button>
+        </DialogActions>
       </Dialog>
     )
   }

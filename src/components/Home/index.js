@@ -53,10 +53,7 @@ class Home extends Component {
     const { classes, allGames, isAuthed, ratingCounts, playersRatings, gameIsLoading, statsIsLoading } = this.props;
     const notAuthed = 
       <div>
-        <Typography variant="h4" component="h4" >You will need to Sign in to check your stats.</Typography>
-        <Button variant="contained" color="primary">
-          Sign In
-        </Button>
+        <Typography variant="h5" >Sign in to check your stats.</Typography>
       </div>
 
     const noRating = (
