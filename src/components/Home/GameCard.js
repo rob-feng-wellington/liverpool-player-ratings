@@ -8,85 +8,72 @@ import ButtonBase from '@material-ui/core/ButtonBase';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button'
 
-import { Link } from 'gatsby'
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardActions from '@material-ui/core/CardActions';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardMedia from '@material-ui/core/CardMedia';
+import Avatar from '@material-ui/core/Avatar';
+
+import { Link } from 'gatsby';
 
 import { OUR_TEAM } from '../../utils/Constant';
 
 const styles = theme => ({
-  root: {
+  card: {
     flexGrow: 1,
     padding: theme.spacing.unit * 2,
     marginBottom: theme.spacing.unit * 4
   },
-  image: {
-    maxWidth: 320,
-    maxHeight: 180,
+  media: {
+    height: 0,
+    paddingTop: '56.25%', // 16:9
+    marginBottom: '1rem'
   },
-  img: {
-    margin: 'auto',
-    display: 'block',
-    maxWidth: '100%',
-    maxHeight: '100%',
+  avatar: {
+    margin: 10,
+    width: 60,
+    height: 60,
   },
 });
 
 const GameCard = props => {
   const { classes, opponent, image, date, score, homeOrAway, hasRated, id, isAuthed } = props;
-  const getHomeScore = (isHome) => isHome ? score.split(':')[0] : score.split(':')[1]
+  const getTitle = (isHome) => isHome ? `${OUR_TEAM} ${score} ${opponent}` : `${opponent} ${score} ${OUR_TEAM}`;
+  const getDate = () => {
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const parts = date.split('-');
+    const dateDate = new Date(parts[0], parts[1] - 1, parts[2]); 
+    return dateDate.toLocaleDateString("en-US", options);
+  }
   return (
-    <Paper className={classes.root}>
-    <Link
-      to={`/rating/${id}`}
-    >
-      <Grid container spacing={16}>
-        <Grid item>
-          <ButtonBase className={classes.image}>
-            <img className={classes.img} alt={`vs ${opponent}`} src={image} />
-          </ButtonBase>
-        </Grid>
-        <Grid item xs={12} sm container>
-          <Grid item xs container direction="column" spacing={16}>
-            <Grid container spacing={0} gutterBottom>
-              <Grid item xs={10}>
-                <Typography variant="h5">
-                  { homeOrAway === 'home' ? OUR_TEAM : opponent }
-                </Typography>
-              </Grid>
-              <Grid item xs={2}>
-                <Typography variant="h5">
-                  { getHomeScore(true) }
-                </Typography>
-              </Grid>
-              <Grid item xs={10}>
-                <Typography variant="h5">
-                  { homeOrAway === 'home' ? opponent : OUR_TEAM }
-                </Typography>
-              </Grid>
-              <Grid item xs={2}>
-                <Typography variant="h5">
-                  { getHomeScore(false) }
-                </Typography>
-              </Grid>
-            </Grid>
-            <Grid container spacing={0}>
-              <Grid item xs={12}>
-                <Typography variant="h5" gutterBottom>{date}</Typography>
-              </Grid>
-            </Grid>
-            <Grid container spacing={0}>
-              <Grid item xs={12}>
-                {
-                  isAuthed && hasRated
-                  ? <Button variant="outlined" color="secondary">Click to review</Button>
-                  : <Button variant="outlined" color="primary">Click to rate</Button>
-                }
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
+    <Card className={classes.card}>
+      <Link to={`/rating/${id}`}>
+        <CardActionArea>
+          <CardHeader
+            avatar={
+              <Avatar 
+                aria-label="premier league" 
+                className={classes.avatar}
+                src="/EPL-LOGO.gif"
+              />
+            }
+            title={getTitle(homeOrAway === 'home')}
+            subheader={getDate()}
+          />
+          <CardMedia
+            className={classes.media}
+            image={image}
+            title={getTitle(homeOrAway === 'home')}
+          />
+        </CardActionArea>
+        <CardActions>
+          <Button size="small" color="primary">
+            Rate
+          </Button>
+        </CardActions>
       </Link>
-    </Paper>
+    </Card>
   )
 }
 

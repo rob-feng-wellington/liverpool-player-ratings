@@ -60,7 +60,10 @@ class NewGame extends Component {
     opponent: '',
     date: (new Date()).toISOString().substring(0, 10),
     homeOrAway: 'home',
+    group: 'epl',
     image: '',
+    homeScore: 0,
+    awayScore: 0,
     isSubmiting: false,
     errorMessages: []
   }
@@ -69,7 +72,7 @@ class NewGame extends Component {
     return this.props.allPlayers.filter(
       (player) => player.id === playerId
     ).reduce(
-      (x, y) => x
+      (x) => x
     )
   }
 
@@ -146,6 +149,9 @@ class NewGame extends Component {
         date,
         homeOrAway,
         image,
+        homeScore,
+        awayScore,
+        group,
         startingList,
         subList
       } = this.state;
@@ -156,6 +162,9 @@ class NewGame extends Component {
           date,
           homeOrAway,
           image,
+          homeScore,
+          awayScore,
+          group,
           startingList,
           subList
         })
@@ -210,6 +219,9 @@ class NewGame extends Component {
       date,
       homeOrAway,
       image,
+      homeScore,
+      awayScore,
+      group,
       isSubmiting,
       errorMessages
     } = this.state;
@@ -279,6 +291,64 @@ class NewGame extends Component {
               onChange={ (e) => {this.handleFieldChange(e, 'date')}}
               fullWidth
             />
+          </Grid>
+          <Grid item xs={3}>
+            <Select
+              value={homeScore}
+              onChange={(e) => this.handleFieldChange(e, 'homeScore')}
+              inputProps={{
+                name: 'homeScore',
+                id: 'home-score-select',
+              }}
+              fullWidth
+            >
+              <MenuItem value={0}>0</MenuItem>
+              <MenuItem value={1}>1</MenuItem>
+              <MenuItem value={2}>2</MenuItem>
+              <MenuItem value={3}>3</MenuItem>
+              <MenuItem value={4}>4</MenuItem>
+              <MenuItem value={5}>5</MenuItem>
+              <MenuItem value={6}>6</MenuItem>
+              <MenuItem value={7}>7</MenuItem>
+              <MenuItem value={8}>8</MenuItem>
+              <MenuItem value={9}>9</MenuItem>
+            </Select>
+          </Grid>
+          <Grid item xs={3}>
+            <Select
+              value={awayScore}
+              onChange={(e) => this.handleFieldChange(e, 'awayScore')}
+              inputProps={{
+                name: 'awayScore',
+                id: 'away-score-select',
+              }}
+              fullWidth
+            >
+              <MenuItem value={0}>0</MenuItem>
+              <MenuItem value={1}>1</MenuItem>
+              <MenuItem value={2}>2</MenuItem>
+              <MenuItem value={3}>3</MenuItem>
+              <MenuItem value={4}>4</MenuItem>
+              <MenuItem value={5}>5</MenuItem>
+              <MenuItem value={6}>6</MenuItem>
+              <MenuItem value={7}>7</MenuItem>
+              <MenuItem value={8}>8</MenuItem>
+              <MenuItem value={9}>9</MenuItem>
+            </Select>
+          </Grid>
+          <Grid item xs={6}>
+            <Select
+              value={group}
+              onChange={(e) => this.handleFieldChange(e, 'group')}
+              inputProps={{
+                name: 'group',
+                id: 'group-select',
+              }}
+              fullWidth
+            >
+              <MenuItem value={'epl'}>Premier League</MenuItem>
+              <MenuItem value={'champions'}>Champions League</MenuItem>
+            </Select> 
           </Grid>
           <Grid item xs={12}>
             <input
