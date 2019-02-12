@@ -19,8 +19,8 @@ const styles = theme => ({
     marginBottom: theme.spacing.unit * 4
   },
   image: {
-    width: 320,
-    height: 160,
+    maxWidth: 320,
+    maxHeight: 180,
   },
   img: {
     margin: 'auto',
@@ -32,7 +32,7 @@ const styles = theme => ({
 
 const GameCard = props => {
   const { classes, opponent, image, date, score, homeOrAway, hasRated, id, isAuthed } = props;
-
+  const getHomeScore = (isHome) => isHome ? score.split(':')[0] : score.split(':')[1]
   return (
     <Paper className={classes.root}>
     <Link
@@ -46,23 +46,41 @@ const GameCard = props => {
         </Grid>
         <Grid item xs={12} sm container>
           <Grid item xs container direction="column" spacing={16}>
-            <Grid item xs>
-              <Typography variant="h6" gutterBottom>
-                {
-                  homeOrAway === 'home' ?
-                  `${OUR_TEAM} ${score} ${opponent}`
-                  :
-                  `${opponent} ${score} ${OUR_TEAM}`
-                }
-              </Typography>
-              <Typography variant="h6" gutterBottom>{`When: ${date}`}</Typography>
+            <Grid container spacing={0} gutterBottom>
+              <Grid item xs={10}>
+                <Typography variant="h5">
+                  { homeOrAway === 'home' ? OUR_TEAM : opponent }
+                </Typography>
+              </Grid>
+              <Grid item xs={2}>
+                <Typography variant="h5">
+                  { getHomeScore(true) }
+                </Typography>
+              </Grid>
+              <Grid item xs={10}>
+                <Typography variant="h5">
+                  { homeOrAway === 'home' ? opponent : OUR_TEAM }
+                </Typography>
+              </Grid>
+              <Grid item xs={2}>
+                <Typography variant="h5">
+                  { getHomeScore(false) }
+                </Typography>
+              </Grid>
             </Grid>
-            <Grid item>
-              {
-                isAuthed && hasRated
-                ? <Button variant="outlined" color="secondary">Click to review</Button>
-                : <Button variant="outlined" color="primary">Click to rate</Button>
-              }
+            <Grid container spacing={0}>
+              <Grid item xs={12}>
+                <Typography variant="h5" gutterBottom>{date}</Typography>
+              </Grid>
+            </Grid>
+            <Grid container spacing={0}>
+              <Grid item xs={12}>
+                {
+                  isAuthed && hasRated
+                  ? <Button variant="outlined" color="secondary">Click to review</Button>
+                  : <Button variant="outlined" color="primary">Click to rate</Button>
+                }
+              </Grid>
             </Grid>
           </Grid>
         </Grid>

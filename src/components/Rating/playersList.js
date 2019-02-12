@@ -37,7 +37,7 @@ const RatingPlayerList = ({classes, players, onRate, ratingsAverge}) => {
                       {
                         ratingsAverge.get(player.id) ?
                         <>
-                          <Typography variant="subtitle1">{`Average rating: ${parseFloat(ratingsAverge.get(player.id))}`}</Typography>
+                          <Typography variant="subtitle1">{`Other's rating: ${parseFloat(ratingsAverge.get(player.id))}`}</Typography>
                           <Slider value={parseFloat(ratingsAverge.get(player.id))} min={0} max={10} step={0.1} disabled/>
                         </>
                         :
