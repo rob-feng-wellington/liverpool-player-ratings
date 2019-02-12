@@ -51,7 +51,9 @@ class NewGame extends Component {
 
   static propTypes = {
     allPlayers: PropTypes.array.isRequired,
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired,
+    isAuthed: PropTypes.bool,
+    email: PropTypes.string
   }
 
   state = {
@@ -66,6 +68,17 @@ class NewGame extends Component {
     awayScore: 0,
     isSubmiting: false,
     errorMessages: []
+  }
+
+
+  componentWillReceiveProps(nextProps) {
+    const { isAuthed } = this.props;
+    const { isAuthed: nextIsAuthed, email: nextEmail } = nextProps;
+
+    if ((!isAuthed && !nextIsAuthed) || (isAuthed && !nextIsAuthed) || nextEmail !== 'robfeng1978@gmail.com') {
+      // user can not access this page
+      window.location = '/';
+    } 
   }
 
   getPlayerById = (playerId) => {

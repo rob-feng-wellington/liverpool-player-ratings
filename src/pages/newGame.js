@@ -39,9 +39,9 @@ class NewGamePage extends Component {
     return (
       <Layout>
         {
-          () => (
-            <NewGame allPlayers={allPlayers}/>
-          )
+          auth => {
+            return <NewGame allPlayers={allPlayers} isAuthed={auth.isAuthed} email={auth.email} />
+          }
         }
       </Layout>
     )

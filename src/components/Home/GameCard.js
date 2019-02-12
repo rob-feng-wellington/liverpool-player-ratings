@@ -2,12 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
-import ButtonBase from '@material-ui/core/ButtonBase';
-import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button'
-
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
@@ -31,9 +26,11 @@ const styles = theme => ({
     marginBottom: '1rem'
   },
   avatar: {
-    margin: 10,
     width: 60,
     height: 60,
+    "& img": {
+      marginBottom: 0
+    }
   },
 });
 
@@ -55,6 +52,7 @@ const GameCard = props => {
               <Avatar 
                 aria-label="premier league" 
                 className={classes.avatar}
+                size={100}
                 src="/EPL-LOGO.gif"
               />
             }
