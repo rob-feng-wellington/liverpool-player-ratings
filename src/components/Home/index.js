@@ -109,7 +109,9 @@ class Home extends Component {
                   id={game.id}
                   opponent={game.opponent}
                   date={game.date}
-                  score={game.score}
+                  homeScore={game.homeScore}
+                  awayScore={game.awayScore}
+                  group={game.group}
                   homeOrAway={game.homeOrAway}
                   image={game.image}
                   isAuthed={isAuthed}

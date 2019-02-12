@@ -2,10 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
-import Button from '@material-ui/core/Button'
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
 import Avatar from '@material-ui/core/Avatar';
@@ -35,13 +33,31 @@ const styles = theme => ({
 });
 
 const GameCard = props => {
-  const { classes, opponent, image, date, score, homeOrAway, hasRated, id, isAuthed } = props;
-  const getTitle = (isHome) => isHome ? `${OUR_TEAM} ${score} ${opponent}` : `${opponent} ${score} ${OUR_TEAM}`;
+  const { classes, opponent, image, date, homeScore, awayScore, group, homeOrAway, hasRated, id, isAuthed } = props;
+  const getTitle = (isHome) => isHome ? `${OUR_TEAM} ${homeScore} : ${awayScore} ${opponent}` : `${opponent} ${homeScore} : ${awayScore} ${OUR_TEAM}`;
   const getDate = () => {
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     const parts = date.split('-');
     const dateDate = new Date(parts[0], parts[1] - 1, parts[2]); 
     return dateDate.toLocaleDateString("en-US", options);
+  }
+  const getGroupLabel = () => {
+    switch (group) {
+      case 'uefa':
+        return 'Champions League';
+      case 'epl':
+      default:
+        return 'English Premier League';
+    }
+  }
+  const getGroupIconSrc = () => {
+    switch (group) {
+      case 'uefa':
+        return '/uefa.png';
+      case 'epl':
+      default:
+        return '/EPL-LOGO.gif';
+    }
   }
   return (
     <Card className={classes.card}>
@@ -50,10 +66,10 @@ const GameCard = props => {
           <CardHeader
             avatar={
               <Avatar 
-                aria-label="premier league" 
+                aria-label={getGroupLabel()}
                 className={classes.avatar}
                 size={100}
-                src="/EPL-LOGO.gif"
+                src={getGroupIconSrc()}
               />
             }
             title={getTitle(homeOrAway === 'home')}
@@ -65,11 +81,6 @@ const GameCard = props => {
             title={getTitle(homeOrAway === 'home')}
           />
         </CardActionArea>
-        <CardActions>
-          <Button size="small" color="primary">
-            Rate
-          </Button>
-        </CardActions>
       </Link>
     </Card>
   )
@@ -80,7 +91,9 @@ GameCard.propTypes = {
   id: PropTypes.string.isRequired,
   opponent: PropTypes.string.isRequired,
   date: PropTypes.string.isRequired,
-  score: PropTypes.string.isRequired,
+  homeScore: PropTypes.number.isRequired,
+  awayScore: PropTypes.number.isRequired,
+  group: PropTypes.string.isRequired,
   homeOrAway: PropTypes.string.isRequired,
   image: PropTypes.string.isRequired,
   isAuthed: PropTypes.bool.isRequired,

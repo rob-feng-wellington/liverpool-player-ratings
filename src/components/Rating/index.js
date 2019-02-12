@@ -39,7 +39,9 @@ class Rating extends Component {
     id: PropTypes.string,
     opponent: PropTypes.string,
     homeOrAway: PropTypes.string,
-    score: PropTypes.string,
+    homeScore: PropTypes.number,
+    awayScore: PropTypes.number,
+    group: PropTypes.string,
     image: PropTypes.string,
     date: PropTypes.string,
     startingPlayers: PropTypes.array,
@@ -58,7 +60,7 @@ class Rating extends Component {
   }
 
   render() {
-    const { classes, isAuthed, id, opponent, date, score, homeOrAway, image, startingPlayers, subPlayers, onRate, onSubmit, ratingsAverge, hasRated } = this.props;
+    const { classes, isAuthed, id, opponent, date, homeScore, awayScore, group, homeOrAway, image, startingPlayers, subPlayers, onRate, onSubmit, ratingsAverge, hasRated } = this.props;
     const startingGroupedPlayers = groupByPosition(startingPlayers);
     const subGroupedPlayers = groupByPosition(subPlayers);
 
@@ -72,7 +74,9 @@ class Rating extends Component {
               date={date}
               homeOrAway={homeOrAway}
               image={image}
-              score={score}
+              homeScore={homeScore}
+              awayScore={awayScore}
+              group={group}
               isAuthed={isAuthed}
               hasRated={hasRated}
             />

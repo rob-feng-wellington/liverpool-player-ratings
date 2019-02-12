@@ -26,7 +26,9 @@ class RatingContainer extends Component {
     opponent: '',
     image: '',
     date: '',
-    score: '',
+    homeScore: 0,
+    awayScore: 0,
+    group: '',
     startingPlayers: [],
     subPlayers: [],
     ratingCount: 0,
@@ -74,7 +76,7 @@ class RatingContainer extends Component {
         .get()
         .then(doc => {
           if (doc.exists) {
-            const { opponent, homeOrAway, score, image, date, startingList, subList } = doc.data();
+            const { opponent, homeOrAway, homeScore, awayScore, group, image, date, startingList, subList } = doc.data();
             this.allRatings
             .where('gameId', '==', gameId)
             .get()
@@ -130,7 +132,9 @@ class RatingContainer extends Component {
                   id: gameId,
                   opponent,
                   homeOrAway,
-                  score,
+                  homeScore,
+                  awayScore,
+                  group,
                   image,
                   date,
                   myRating,
@@ -289,7 +293,7 @@ class RatingContainer extends Component {
   }
 
   render() {
-    const { loading, opponent, homeOrAway, score, image, date, startingPlayers, subPlayers, ratingCount, ratingsAverge, hasRated } = this.state;
+    const { loading, opponent, homeOrAway, homeScore, awayScore, group, image, date, startingPlayers, subPlayers, ratingCount, ratingsAverge, hasRated } = this.state;
     const { gameId, isAuthed } = this.props;
     console.log('isAuthed', isAuthed);
     return loading ?
@@ -304,7 +308,9 @@ class RatingContainer extends Component {
           id={gameId}
           opponent={opponent}
           homeOrAway={homeOrAway}
-          score={score}
+          homeScore={homeScore}
+          awayScore={awayScore}
+          group={group}
           image={image}
           date={date}
           startingPlayers={startingPlayers}
