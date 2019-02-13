@@ -59,7 +59,7 @@ class Home extends Component {
     const noRating = (
       <>
         <Typography variant="h4">My Stats</Typography>
-        <Typography variant="h6">Kick off your rating by choosing one of the games on the right</Typography>
+        <Typography variant="h5">Could not find any ratings...</Typography>
       </>
     );
 
@@ -73,7 +73,7 @@ class Home extends Component {
                 <ListItem key={key} className={classes.statsListItem}>
                   <Avatar className={classes.orangeAvatar}>{player.rating}</Avatar>
                   <ListItemText 
-                    primary={`No.${player.number} - ${player.name} `} 
+                    primary={`#${player.number} - ${player.name} `} 
                     secondary={`Rated: ${player.appearance} times`} />
                 </ListItem>
               )

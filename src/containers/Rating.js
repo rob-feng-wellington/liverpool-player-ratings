@@ -4,6 +4,8 @@ import Rating from '../components/Rating';
 import { navigate } from "@reach/router";
 import LoginDialog from '../components/loginDialog';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import Snackbar from '@material-ui/core/Snackbar';
+import MySnackbarContent from '../components/mySnackbarContent';
 
 import { DEFAULT_RATING } from '../utils/Constant';
 
@@ -36,6 +38,13 @@ class RatingContainer extends Component {
     ratingsAverge: new Map,
     signInDialogIsOpen: false,
     hasRated: false,
+    openSuccessSnack: false,
+    openFailedSnack: false,
+    emailErrorMessage: '',
+    passwordErrorMessage: '',
+    addEmailErrorMessage: '',
+    addPasswordErrorMessage: '',
+    addPasswordConfirmErrorMessage: ''
   }
 
   componentDidMount() {
@@ -63,6 +72,9 @@ class RatingContainer extends Component {
       if ((!uid && !nextUid) || (uid && !nextUid)) {
         //this.signInAnonymously();
       } else {
+        if (this.state.submitting === true) {
+          this.handleSubmit();
+        }
         // a uid exists, check if the user has already voted
         this.checkMyRatings(nextUid, this.state.ratings);
       }
@@ -238,6 +250,7 @@ class RatingContainer extends Component {
 
   doSubmit = (gameId, uid) => {
     const {startingPlayers, subPlayers} = this.state;
+    const that = this;
     const myStartingRatings = startingPlayers.reduce((r, o) => {
       const key = o.id;
       const value = o.rating;
@@ -251,27 +264,107 @@ class RatingContainer extends Component {
       return r;
     }, myStartingRatings);
     this.allRatings
-      .add({
-        gameId,
-        uid,
-        ratings: finalRatings
+      .where('gameId', '==', gameId)
+      .where('uid', '==', uid)
+      .get()
+      .then(function(querySnapshot) {
+        if(querySnapshot.size > 0) {
+          // already exist, do update
+          querySnapshot.forEach(function(doc) {
+            that.allRatings
+              .doc(doc.id)
+              .set({
+                ratings: finalRatings
+              },{merge: true})
+              .then(function() {
+                that.setState({
+                  openSuccessSnack: true
+                })
+              })
+              .catch(function(error) {
+                console.log('error =>', error);
+                that.setState({
+                  openFailedSnack: true
+                })
+              })
+          });
+        } else {
+          // does not exist, do insert
+          that.allRatings
+          .add({
+            gameId,
+            uid,
+            ratings: finalRatings
+          })
+          .then((docRef) => {
+            console.log("Document written with ID: ", docRef.id);
+            that.setState({
+              openSuccessSnack: true
+            })
+          })
+          .catch((error) => {
+            console.error("Error writing document: ", error);
+            that.setState({
+              openFailedSnack: true
+            })
+          })
+        }
+        that.setState({
+          submitting: false
+        })
       })
-      .then((docRef) => {
-        console.log("Document written with ID: ", docRef.id);
-      })
-      .catch((error) => {
-        console.error("Error writing document: ", error);
-      })
+
+
+    
   }
 
-  handleSignIn = () => {
-    if (signinOption === 'google') {
-      this.props.signIn('google')
-    } else if (signinOption === 'email') {
-      this.props.signIn('email', email, password)
-    } else if (signinOption === 'signup') {
-      this.props.signIn('signup', email, password)
+  handleLoginDialogClose = (signinOption, email, password) => {
+    let signinRequest;
+
+    if (signinOption === 'email' || signinOption === 'signup') {
+      signinRequest = this.props.signIn(signinOption, email, password)
+    } else {
+      signinRequest = this.props.signIn(signinOption);
     }
+
+    signinRequest.catch(error=> {
+      this.handleFailedMessages(error);
+    })
+    
+    this.setState({
+      signInDialogIsOpen: false
+    })
+  }
+
+  handleFailedMessages = (error) => {
+    let errorMessage = {
+      signInDialogIsOpen: true,
+      emailErrorMessage: '',
+      passwordErrorMessage: '',
+      addEmailErrorMessage: '',
+      addPasswordErrorMessage: '',
+      addPasswordConfirmErrorMessage: ''
+    }
+
+    switch(error.code) {
+      case 'auth/invalid-email':
+      case 'auth/user-not-found':
+        errorMessage = {...errorMessage, emailErrorMessage: error.message}
+        break;
+      case 'auth/wrong-password':
+        errorMessage = {...errorMessage, passwordErrorMessage: error.message}
+        break;
+      default:
+        errorMessage =  {...errorMessage, emailErrorMessage: 'unknown error, please try again'}
+    }
+    this.setState(errorMessage);
+  }
+
+  handleSnackbarClose = () => {
+    this.setState({
+      openSuccessSnack: false,
+      openFailedSnack: false
+    })
   }
 
   get game() {
@@ -324,10 +417,45 @@ class RatingContainer extends Component {
         />
         <LoginDialog
           open={this.state.signInDialogIsOpen}
-          onClose={this.handleSignIn}
+          onClose={this.handleLoginDialogClose}
           showLogin={true}
-          showSignUp={true}
+          showSignUp={false}
+          emailErrorMessage= {this.state.emailErrorMessage}
+          passwordErrorMessage= {this.state.passwordErrorMessage}
+          addEmailErrorMessage= {this.state.addEmailErrorMessage}
+          addPasswordErrorMessage= {this.state.addPasswordErrorMessage}
+          addPasswordConfirmErrorMessage= {this.state.addPasswordConfirmErrorMessage}
         />
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+          open={this.state.openSuccessSnack}
+          autoHideDuration={6000}
+          onClose={this.handleSnackbarClose}
+        >
+          <MySnackbarContent
+            onClose={this.handleSnackbarClose}
+            variant="success"
+            message="Ratings submitted successfully!"
+          />
+        </Snackbar>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+          open={this.state.openFailedSnack}
+          autoHideDuration={6000}
+          onClose={this.handleSnackbarClose}
+        >
+          <MySnackbarContent
+            onClose={this.handleSnackbarClose}
+            variant="error"
+            message="Ratings submitted failed!"
+          />
+        </Snackbar>
       </>
   }
 

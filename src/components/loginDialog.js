@@ -17,7 +17,10 @@ const styles = theme => ({
 
   title: {
     paddingTop: '0.5em',
-    paddingBottom: '0.5em'
+    paddingBottom: '0.5em',
+    "& > h6": {
+      fontStyle: 'normal'
+    }
   },
 
   list: {
