@@ -18,17 +18,11 @@ const styles = theme => ({
     flexDirection: 'column',
     alignItems: 'center'
   },
-  imageWrapper: {
-    width: '100vw',
-    position: 'relative',
-    left: '50%',
-    right: '50%',
-    marginLeft: '-50vw',
-    marginRight: '-50vw',
-  },
-  image: {
-    width: '100vw',
-    height: '20vh',
+
+  ratingWrapper: {
+    ...theme.mixins.gutters(),
+    paddingTop: theme.spacing.unit * 2,
+    paddingBottom: theme.spacing.unit * 2,
   }
 })
 
@@ -82,17 +76,19 @@ class Rating extends Component {
             />
           </Grid>
           <Grid item xs={8}>
-            <Grid item xs={12}>
-              <Typography variant="h4" gutterBottom>Starting Line-up</Typography>
-              <RatingPlayerList players={startingGroupedPlayers} ratingsAverge={ratingsAverge} onRate={onRate}/>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography variant="h4" gutterBottom>Substitutes</Typography>
-              <RatingPlayerList players={subGroupedPlayers} ratingsAverge={ratingsAverge} onRate={onRate}/>
-            </Grid>
-            <Button variant="outlined" color="primary" onClick={onSubmit}>
-              Submit Ratings
-            </Button>
+            <Paper className={classes.ratingWrapper} elevation={1}>
+              <Grid item xs={12}>
+                <Typography variant="h4" gutterBottom>Starting Line-up</Typography>
+                <RatingPlayerList players={startingGroupedPlayers} ratingsAverge={ratingsAverge} onRate={onRate}/>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="h4" gutterBottom>Substitutes</Typography>
+                <RatingPlayerList players={subGroupedPlayers} ratingsAverge={ratingsAverge} onRate={onRate}/>
+              </Grid>
+              <Button variant="outlined" color="primary" onClick={onSubmit}>
+                Submit Ratings
+              </Button>
+            </Paper>
           </Grid>
         </Grid>
       </div>
