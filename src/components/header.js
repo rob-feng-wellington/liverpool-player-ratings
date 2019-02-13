@@ -102,54 +102,52 @@ class Header extends Component {
     const { classes, siteTitle, isAuthed, email } = this.props;
 
     return (
-      <div>
-        <AppBar position="static">
-          <Toolbar>
-            <Typography variant="h5" color="inherit" style={{
-              flexGrow: 1,
-            }}>
-              <Link to={`/`} className={classes.title}>
-                {siteTitle.toUpperCase()}
-              </Link>
-            </Typography>
-            {
-              isAuthed ?
-              <div>
-                Welcome {email}
-                <Button color="inherit" onClick={this.props.signOut}>
-                  Logout
-                </Button>
-              </div>
-              :
-              <div>
-                <Button 
-                  color="inherit"
-                  onClick={this.handleClickOpenLogin}
-                >
-                  Sign In
-                </Button>
-                <Button
-                  color="inherit"
-                  onClick={this.handleClickOpenSignUp}
-                >
-                  SignUp
-                </Button>
-                <LoginDialog
-                  open={this.state.signInDialogIsOpen}
-                  onClose={this.handleLoginDialogClose}
-                  showLogin={this.state.showLogin}
-                  showSignUp={this.state.showSignUp}
-                  emailErrorMessage= {this.state.emailErrorMessage}
-                  passwordErrorMessage= {this.state.passwordErrorMessage}
-                  addEmailErrorMessage= {this.state.addEmailErrorMessage}
-                  addPasswordErrorMessage= {this.state.addPasswordErrorMessage}
-                  addPasswordConfirmErrorMessage= {this.state.addPasswordConfirmErrorMessage}
-                />
-              </div>
-            }
-          </Toolbar>
-        </AppBar>
-      </div>
+      <AppBar position="fixed">
+        <Toolbar>
+          <Typography variant="h5" color="inherit" style={{
+            flexGrow: 1,
+          }}>
+            <Link to={`/`} className={classes.title}>
+              {siteTitle.toUpperCase()}
+            </Link>
+          </Typography>
+          {
+            isAuthed ?
+            <div>
+              Welcome {email}
+              <Button color="inherit" onClick={this.props.signOut}>
+                Logout
+              </Button>
+            </div>
+            :
+            <div>
+              <Button 
+                color="inherit"
+                onClick={this.handleClickOpenLogin}
+              >
+                Sign In
+              </Button>
+              <Button
+                color="inherit"
+                onClick={this.handleClickOpenSignUp}
+              >
+                SignUp
+              </Button>
+              <LoginDialog
+                open={this.state.signInDialogIsOpen}
+                onClose={this.handleLoginDialogClose}
+                showLogin={this.state.showLogin}
+                showSignUp={this.state.showSignUp}
+                emailErrorMessage= {this.state.emailErrorMessage}
+                passwordErrorMessage= {this.state.passwordErrorMessage}
+                addEmailErrorMessage= {this.state.addEmailErrorMessage}
+                addPasswordErrorMessage= {this.state.addPasswordErrorMessage}
+                addPasswordConfirmErrorMessage= {this.state.addPasswordConfirmErrorMessage}
+              />
+            </div>
+          }
+        </Toolbar>
+      </AppBar>
     )
   }
 }

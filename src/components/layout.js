@@ -54,7 +54,7 @@ const Layout = ({ children, ...props }) => (
                     margin: '0 auto',
                     maxWidth: rhythm(40),
                     padding: `${rhythm(1.5)} ${rhythm(3 / 4)}`,
-                    paddingTop: 0,
+                    paddingTop: 80,
                   }}>
                   {children({
                     ...props,
